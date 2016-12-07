@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.android.colorpickerpreference;
+package net.darkkatrom.dkcolorpicker.drawable;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -35,6 +35,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+
+import net.darkkatrom.dkcolorpicker.R;
+import net.darkkatrom.dkcolorpicker.util.ColorPickerHelper;
 
 public class ColorViewCircleDrawable extends Drawable {
 	private static final int sNumRectangles = 6;
@@ -87,7 +90,7 @@ public class ColorViewCircleDrawable extends Drawable {
 		mBorderPaint.setStrokeWidth(mBorderWidth);
 		mBorderPaint.setStyle(Paint.Style.STROKE);
 
-        mFavoriteBitmap = Util.drawableToBitmap(res.getDrawable(R.drawable.ic_favorite_emty));
+        mFavoriteBitmap = ColorPickerHelper.drawableToBitmap(res.getDrawable(R.drawable.ic_favorite_emty));
         mShowFavoriteIcon = false;
     }
 

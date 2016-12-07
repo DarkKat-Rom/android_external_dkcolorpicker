@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.colorpickerpreference;
+package net.darkkatrom.dkcolorpicker.widget;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -23,6 +23,9 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.FrameLayout;
 import android.view.View;
+
+import net.darkkatrom.dkcolorpicker.R;
+import net.darkkatrom.dkcolorpicker.drawable.ColorViewCircleDrawable;
 
 public class ApplyColorView extends FrameLayout {
 

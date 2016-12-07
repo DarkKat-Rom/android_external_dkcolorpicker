@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.colorpickerpreference;
+package net.darkkatrom.dkcolorpicker.widget;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -25,6 +25,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.util.AttributeSet;
+
+import net.darkkatrom.dkcolorpicker.R;
+import net.darkkatrom.dkcolorpicker.drawable.ColorViewCircleDrawable;
+import net.darkkatrom.dkcolorpicker.util.ColorPickerHelper;
 
 public class ColorViewButton extends LinearLayout {
 
@@ -63,7 +67,7 @@ public class ColorViewButton extends LinearLayout {
             return;
         }
         mColorPreview.setColor(color);
-        mHexView.setText(ColorPickerPreference.convertToARGB(color));
+        mHexView.setText(ColorPickerHelper.convertToARGB(color));
 	}
 
 	public int getColor() {

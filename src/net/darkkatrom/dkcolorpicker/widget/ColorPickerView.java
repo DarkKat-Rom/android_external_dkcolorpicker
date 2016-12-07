@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.colorpickerpreference;
+package net.darkkatrom.dkcolorpicker.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -32,6 +32,8 @@ import android.graphics.Shader.TileMode;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import net.darkkatrom.dkcolorpicker.drawable.AlphaPatternDrawable;
 
 /**
  * Displays a color picker to the user and allow them

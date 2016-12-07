@@ -15,7 +15,7 @@
      limitations under the License.
 -->
 
-<com.android.colorpickerpreference.ColorViewButton
+<net.darkkatrom.dkcolorpicker.widget.ColorViewButton
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="0px"
     android:layout_height="wrap_content"
@@ -39,4 +39,4 @@
         android:textSize="@dimen/color_picker_color_button_value_text_size"
         android:textColor="?android:attr/textColorSecondary" />
 
-</com.android.colorpickerpreference.ColorViewButton>
+</net.darkkatrom.dkcolorpicker.widget.ColorViewButton>

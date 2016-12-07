@@ -15,9 +15,9 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := colorpickerpreference
+LOCAL_MODULE := dkcolorpicker
 LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4
-LOCAL_SDK_VERSION := 23
+LOCAL_SDK_VERSION := 24
 LOCAL_SRC_FILES := \
      $(call all-java-files-under, src) \
      $(call all-logtags-files-under, src)

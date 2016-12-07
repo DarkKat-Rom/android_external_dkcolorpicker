@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.colorpickerpreference;
+package net.darkkatrom.dkcolorpicker.drawable;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;

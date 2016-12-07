@@ -27,7 +27,7 @@
         android:layout_alignParentTop="true"
         android:orientation="horizontal">
 
-        <com.android.colorpickerpreference.ColorPickerView 
+        <net.darkkatrom.dkcolorpicker.widget.ColorPickerView 
             android:id="@+id/color_picker_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

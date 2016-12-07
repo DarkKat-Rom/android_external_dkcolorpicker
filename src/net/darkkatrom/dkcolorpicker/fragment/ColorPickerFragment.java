@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.colorpickerpreference;
+package net.darkkatrom.dkcolorpicker.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -26,6 +26,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
@@ -50,14 +51,18 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import net.darkkatrom.dkcolorpicker.R;
+import net.darkkatrom.dkcolorpicker.widget.ApplyColorView;
+import net.darkkatrom.dkcolorpicker.widget.ColorPickerView;
+import net.darkkatrom.dkcolorpicker.widget.ColorViewButton;
+import net.darkkatrom.dkcolorpicker.util.ColorPickerHelper;
+
 public class ColorPickerFragment extends Fragment implements
         ColorPickerView.OnColorChangedListener, TextWatcher, View.OnClickListener,
                 View.OnLongClickListener, View.OnFocusChangeListener {
 
     private static final String PREFERENCE_NAME  =
             "color_picker_fragment";
-    private static final String PREFERENCE_FALLBACK_NAME  =
-            "color_picker_dialog";
     private static final String SHOW_FAVORITES =
             "show_favorites";
     private static final String SHOW_HELP_SCREEN  =
@@ -79,7 +84,6 @@ public class ColorPickerFragment extends Fragment implements
     private static final int HELP_SCREEN_VISIBILITY = 3;
 
     private SharedPreferences mPrefs;
-    private SharedPreferences mFallbackPrefs;
     private Resources mResources;
 
     private ApplyColorView mApplyColorAction;
@@ -144,9 +148,7 @@ public class ColorPickerFragment extends Fragment implements
     private View inflateAndSetupView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        mPrefs = getActivity().getSharedPreferences(PREFERENCE_NAME, Activity.MODE_PRIVATE);
-        mFallbackPrefs = getActivity().getSharedPreferences(
-                PREFERENCE_FALLBACK_NAME, Activity.MODE_PRIVATE);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mResources = getActivity().getResources();
 
 		mFullTranslationX = mResources.getDimension(
@@ -252,7 +254,7 @@ public class ColorPickerFragment extends Fragment implements
         LinearLayout editHexActionView = (LinearLayout) mShowEditHexAction.getActionView();
         mEditHexValue = (EditText) editHexActionView.findViewById(R.id.ab_edit_hex);
         ImageButton setHexValueButton = (ImageButton) editHexActionView.findViewById(R.id.ab_edit_hex_enter);
-        mEditHexValue.setText(ColorPickerPreference.convertToARGB(mNewColorValue));
+        mEditHexValue.setText(ColorPickerHelper.convertToARGB(mNewColorValue));
         mEditHexValue.setOnFocusChangeListener(this);
         setHexValueButton.setOnClickListener(this);
 
@@ -282,7 +284,7 @@ public class ColorPickerFragment extends Fragment implements
             @Override public void onAnimationUpdate(ValueAnimator animation) {
                 float position = animation.getAnimatedFraction();
                 if (mAnimationType == COLOR_TRANSITION) {
-                    int blended = Util.getBlendColor(mOldColorValue, mNewColorValue, position);
+                    int blended = ColorPickerHelper.getBlendColor(mOldColorValue, mNewColorValue, position);
                     mApplyColorAction.setColor(blended);
                     if (mApplyColorIconAnimationType != NONE) {
                         final boolean animateShow = mApplyColorIconAnimationType == SHOW;
@@ -489,7 +491,7 @@ public class ColorPickerFragment extends Fragment implements
             mColorPicker.setColor(mResetColor2, true);
             return true;
         } else if (item.getItemId() == R.id.edit_hex) {
-            mEditHexValue.setText(ColorPickerPreference.convertToARGB(mNewColorValue));
+            mEditHexValue.setText(ColorPickerHelper.convertToARGB(mNewColorValue));
             return true;
         } else if (item.getItemId() == R.id.show_hide_favorites) {
             mAnimationType = FAVORITES_VISIBILITY;
@@ -519,7 +521,7 @@ public class ColorPickerFragment extends Fragment implements
 			String text = mEditHexValue.getText().toString();
 			mShowEditHexAction.collapseActionView();
             try {
-                int newColor = ColorPickerPreference.convertToColorInt(text);
+                int newColor = ColorPickerHelper.convertToColorInt(text);
                 if (newColor != mOldColorValue) {
                     mNewColorValue = newColor;
                     mOldColorValue = mNewColorValue;
@@ -590,7 +592,7 @@ public class ColorPickerFragment extends Fragment implements
 
             try {
                 if (mEditHexValue != null) {
-                    mEditHexValue.setText(ColorPickerPreference.convertToARGB(color));
+                    mEditHexValue.setText(ColorPickerHelper.convertToARGB(color));
                 }
             } catch (Exception e) {}
         }
@@ -635,8 +637,7 @@ public class ColorPickerFragment extends Fragment implements
     }
 
     private boolean getShowFavorites() {
-        boolean fallback = mFallbackPrefs.getBoolean("favorites_visible", true);
-        return mPrefs.getBoolean(SHOW_FAVORITES, fallback);
+        return mPrefs.getBoolean(SHOW_FAVORITES, true);
     }
 
     private void writeFavoriteButtonValue(ColorViewButton button) {
@@ -645,8 +646,7 @@ public class ColorPickerFragment extends Fragment implements
     }
 
     private int getFavoriteButtonValue(ColorViewButton button) {
-        int fallback = mFallbackPrefs.getInt(FAVORITE_COLOR_BUTTON + (String) button.getTag(), 0);
-        return mPrefs.getInt(FAVORITE_COLOR_BUTTON + (String) button.getTag(), fallback);
+        return mPrefs.getInt(FAVORITE_COLOR_BUTTON + (String) button.getTag(), 0);
     }
 
     private void writeShowHelpScreen(boolean show) {
@@ -654,8 +654,7 @@ public class ColorPickerFragment extends Fragment implements
     }
 
     private boolean getShowHelpScreen() {
-        boolean fallback = mFallbackPrefs.getBoolean(SHOW_HELP_SCREEN, true);
-        return mPrefs.getBoolean(SHOW_HELP_SCREEN, fallback);
+        return mPrefs.getBoolean(SHOW_HELP_SCREEN, true);
     }
 
     @Override
