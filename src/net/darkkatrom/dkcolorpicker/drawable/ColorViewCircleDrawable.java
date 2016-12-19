@@ -90,7 +90,8 @@ public class ColorViewCircleDrawable extends Drawable {
 		mBorderPaint.setStrokeWidth(mBorderWidth);
 		mBorderPaint.setStyle(Paint.Style.STROKE);
 
-        mFavoriteBitmap = ColorPickerHelper.drawableToBitmap(res.getDrawable(R.drawable.ic_favorite_emty));
+        mFavoriteBitmap = ColorPickerHelper.drawableToBitmap(
+                context.getDrawable(R.drawable.ic_favorite_emty));
         mShowFavoriteIcon = false;
     }
 

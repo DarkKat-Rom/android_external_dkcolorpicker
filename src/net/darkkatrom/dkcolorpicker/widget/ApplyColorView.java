@@ -53,7 +53,7 @@ public class ApplyColorView extends FrameLayout {
         super.onFinishInflate();
         final Resources res = getContext().getResources();
         final int drawableSize = (int) res.getDimension(R.dimen.color_picker_button_drawable_size);
-        mBorderColor = res.getColor(R.color.color_picker_color_view_drawable_border);
+        mBorderColor = getContext().getColor(R.color.color_picker_color_view_drawable_border);
 
 	    mColorView = (ImageView) findViewById(R.id.apply_color_action_color);
 	    mColorSet = (ImageView) findViewById(R.id.apply_color_action_set);
