@@ -54,8 +54,6 @@ public class ColorPickerPreference extends Preference {
 
     private final Resources mResources;
 
-    private View mView;
-    private ColorViewButton mPreview;
     private String mPickerSubtitle = null;
     private String mPickerTitle = null;
     private int mDefaultValue = Color.BLACK;
@@ -133,18 +131,18 @@ public class ColorPickerPreference extends Preference {
 
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        setNewColor(restoreValue ? getValue() : (Integer) defaultValue);
+        setNewColorInternal(restoreValue ? getValue() : (Integer) defaultValue);
     }
 
     @Override
     public void onBindView(View view) {
         super.onBindView(view);
-        mView = view;
 
+        ColorViewButton preview = null;
         if (view != null) {
-            mPreview = (ColorViewButton) view.findViewById(R.id.color_picker_widget);
+            preview = (ColorViewButton) view.findViewById(R.id.color_picker_widget);
         }
-        if (mPreview != null) {
+        if (preview != null) {
             TypedValue tv = new TypedValue();
             int borderColor;
             getContext().getTheme().resolveAttribute(android.R.attr.colorControlHighlight, tv, true);
@@ -153,9 +151,9 @@ public class ColorPickerPreference extends Preference {
             } else {
                 borderColor = getContext().getColor(tv.resourceId);
             }
-            mPreview.setBorderColor(borderColor);
+            preview.setColor(mValue);
+            preview.setBorderColor(borderColor);
         }
-        setPreviewColor();
     }
 
     @Override
@@ -175,12 +173,6 @@ public class ColorPickerPreference extends Preference {
         return extras;
     }
 
-    private void setPreviewColor() {
-        if (mPreview != null) {
-            mPreview.setColor(mValue);
-        }
-    }
-
     private int getValue() {
         try {
             if (isPersistent()) {
@@ -193,21 +185,20 @@ public class ColorPickerPreference extends Preference {
         return mValue;
     }
 
-    public void setNewColor(int color) {
-        setNewColor(color, false);
-    }
-
-    public void setNewColor(int color, boolean notifyListener) {
+    private void setNewColorInternal(int color) {
         if (isPersistent()) {
             persistInt(color);
         }
         mValue = color;
-        setPreviewColor();
-        if (notifyListener) {
-            try {
-                getOnPreferenceChangeListener().onPreferenceChange(this, color);
-            } catch (NullPointerException e) {
-            }
+        notifyChanged();
+
+    }
+
+    public void setNewColor(int color) {
+        setNewColorInternal(color);
+        try {
+            getOnPreferenceChangeListener().onPreferenceChange(this, color);
+        } catch (NullPointerException e) {
         }
     }
 
