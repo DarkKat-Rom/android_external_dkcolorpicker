@@ -21,6 +21,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -28,6 +29,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
@@ -75,10 +77,9 @@ public class ColorPickerFragment extends Fragment implements
     public static final String KEY_RESET_COLOR_1_TITLE      = "reset_color_1_Title";
     public static final String KEY_RESET_COLOR_2_TITLE      = "reset_color_2_Title";
     public static final String KEY_ALPHA_SLIDER_VISIBLE     = "alpha_slider_visible";
-    public static final String KEY_SHOW_HELP_SCREEN         = "show_help_screen";
-    public static final String KEY_SHOW_FAVORITES           = "show_favorites";
+
+    public static final String COLOR_PICKER_FAVORITES        = "color_picker_favorite_";
     public static final String KEY_HELP_SCREEN_VISIBILITY   = "help_screen_Visibility";
-    public static final String KEY_ID_FAVORITE_COLOR_BUTTON = "favorite_color_button_";
 
     private static final int HELP_SCREEN_VISIBILITY_DEFAULT = 0;
     private static final int HELP_SCREEN_VISIBILITY_VISIBLE = 1;
@@ -373,7 +374,7 @@ public class ColorPickerFragment extends Fragment implements
                 } else if (mAnimationType == ANIMATE_FAVORITES_VISIBILITY) {
                     animation.setInterpolator(null);
                     mShowFavorites = !mShowFavorites;
-                    writeShowFavorites(mShowFavorites);
+                    putShowFavorites(mShowFavorites);
                 } else {
                     animation.setInterpolator(null);
                     if (mHelpScreenVisible) {
@@ -595,7 +596,7 @@ public class ColorPickerFragment extends Fragment implements
             } catch (Exception e) {}
         } else if (v.getId() == R.id.color_picker_check_show_help_screen) {
             mCheckShowHelpScreen.toggle();
-            writeShowHelpScreen(!mCheckShowHelpScreen.isChecked());
+            putShowHelpScreen(!mCheckShowHelpScreen.isChecked());
         } else if (v.getId() == R.id.color_picker_help_button_ok) {
             mAnimationType = ANIMATE_HELP_SCREEN_VISIBILITY;
             mAnimator.setInterpolator(new FastOutSlowInInterpolator());
@@ -619,7 +620,7 @@ public class ColorPickerFragment extends Fragment implements
         }
         button.setShowFavoriteIcon(false);
         button.setColor(mApplyColorAction.getColor());
-        writeFavoriteButtonValue(button);
+        putFavoriteButtonValue(button);
         return true;
     }
 
@@ -684,30 +685,37 @@ public class ColorPickerFragment extends Fragment implements
         return this;
     }
 
-    private void writeShowFavorites(boolean show) {
-        mPrefs.edit().putBoolean(KEY_SHOW_FAVORITES, show).commit();
+    private void putShowFavorites(boolean show) {
+        Settings.System.putInt(getActivity().getContentResolver(),
+                Settings.System.COLOR_PICKER_SHOW_FAVORITES, show ? 1 : 0);
         getActivity().invalidateOptionsMenu();
     }
 
     private boolean getShowFavorites() {
-        return mPrefs.getBoolean(KEY_SHOW_FAVORITES, true);
+        return Settings.System.getInt(getActivity().getContentResolver(),
+                Settings.System.COLOR_PICKER_SHOW_FAVORITES, 1) == 1;
     }
 
-    private void writeFavoriteButtonValue(ColorViewButton button) {
-        mPrefs.edit().putInt(KEY_ID_FAVORITE_COLOR_BUTTON + (String) button.getTag(),
-                button.getColor()).commit();
+    private void putFavoriteButtonValue(ColorViewButton button) {
+        Settings.System.putInt(getActivity().getContentResolver(),
+                COLOR_PICKER_FAVORITES + (String) button.getTag(), button.getColor());
     }
 
     private int getFavoriteButtonValue(ColorViewButton button) {
-        return mPrefs.getInt(KEY_ID_FAVORITE_COLOR_BUTTON + (String) button.getTag(), 0);
+        return Settings.System.getInt(getActivity().getContentResolver(),
+                COLOR_PICKER_FAVORITES + (String) button.getTag(), 0);
     }
 
-    private void writeShowHelpScreen(boolean show) {
-        mPrefs.edit().putBoolean(KEY_SHOW_HELP_SCREEN, show).commit();
+    private void putShowHelpScreen(boolean show) {
+        Settings.System.putInt(getActivity().getContentResolver(),
+                Settings.System.COLOR_PICKER_SHOW_HELP_SCREEN, show
+                ? HELP_SCREEN_VISIBILITY_VISIBLE : HELP_SCREEN_VISIBILITY_GONE);
     }
 
     private boolean getShowHelpScreen() {
-        return mPrefs.getBoolean(KEY_SHOW_HELP_SCREEN, true);
+        return Settings.System.getInt(getActivity().getContentResolver(),
+                Settings.System.COLOR_PICKER_SHOW_HELP_SCREEN, HELP_SCREEN_VISIBILITY_VISIBLE)
+                == HELP_SCREEN_VISIBILITY_VISIBLE;
     }
 
     private boolean resolveHelpScreenVisibility(int visibility) {
