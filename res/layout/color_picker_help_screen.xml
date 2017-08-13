@@ -21,7 +21,8 @@
     android:paddingStart="@dimen/color_picker_help_screen_padding_start_end"
     android:paddingEnd="@dimen/color_picker_help_screen_padding_start_end"
     android:background="@color/color_picker_help_screen_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.HelpScreen">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/color_picker_action_bar_title_margin_start"
             android:textSize="@dimen/color_picker_help_screen_main_title_text_size"
-            android:textColor="@color/white"
+            android:textColor="?android:attr/textColorPrimary"
             android:text="@string/color_picker_help_screen_title"
             android:singleLine="true" />
 
@@ -73,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_ab_back_title"
                 android:singleLine="true" />
 
@@ -82,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_ab_back_summary" />
 
             <TextView
@@ -90,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_ab_name_title"
                 android:singleLine="true" />
 
@@ -99,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_ab_name_summary" />
 
             <TextView
@@ -107,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_ab_color_apply_title"
                 android:singleLine="true" />
 
@@ -116,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_ab_color_apply_summary" />
 
             <TextView
@@ -124,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_secondary_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_ab_hex_title"
                 android:singleLine="true" />
 
@@ -133,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_ab_hex_summary" />
 
             <TextView
@@ -141,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_ab_menu_title"
                 android:singleLine="true" />
 
@@ -150,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_secondary_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_secondary_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_ab_menu_reset_title"
                 android:singleLine="true" />
 
@@ -159,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_ab_menu_reset_summary" />
 
             <TextView
@@ -167,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_secondary_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_secondary_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_ab_menu_favorites_title"
                 android:singleLine="true" />
 
@@ -176,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_ab_menu_favorites_summary" />
 
             <TextView
@@ -184,7 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_secondary_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_secondary_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_ab_menu_help_title"
                 android:singleLine="true" />
 
@@ -193,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_ab_menu_help_summary" />
 
             <TextView
@@ -210,7 +211,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_picker_view_title"
                 android:singleLine="true" />
 
@@ -219,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_picker_view_summary" />
 
             <TextView
@@ -227,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_color_buttons_title"
                 android:singleLine="true" />
 
@@ -236,7 +237,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_secondary_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_secondary_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_favorites_title" />
 
             <TextView
@@ -244,7 +245,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_favorites_summary" />
 
             <TextView
@@ -252,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_secondary_title_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_secondary_title_text_size"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/color_picker_help_palette_title" />
 
             <TextView
@@ -260,7 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/color_picker_help_screen_summary_margin_top"
                 android:textSize="@dimen/color_picker_help_screen_summary_text_size"
-                android:textColor="@color/color_picker_help_summary_text_color"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/color_picker_help_palette_summary" />
 
         </LinearLayout>
@@ -279,7 +280,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:textSize="@dimen/color_picker_help_screen_title_text_size"
-            android:textColor="@color/white"
+            android:textColor="?android:attr/textColorPrimary"
             android:text="@string/color_picker_help_do_not_show_title"
             android:drawablePadding="6dp"
             android:drawableEnd="@drawable/indicator_check_box" />
@@ -295,7 +296,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="end"
-            android:textColor="@color/white"
+            android:textColor="@color/color_button_text_color"
             android:text="@string/color_picker_help_button_ok_title"
             android:background="@drawable/button_colored" />
 

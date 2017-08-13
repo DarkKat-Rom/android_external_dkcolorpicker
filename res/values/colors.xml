@@ -41,5 +41,5 @@
 
     <!-- Colors of the help screen -->
     <color name="color_picker_help_screen_background">#e0000000</color>
-    <color name="color_picker_help_summary_text_color">#b3ffffff</color>
+    <color name="color_button_text_color">#ffffffff</color>
 </resources>
