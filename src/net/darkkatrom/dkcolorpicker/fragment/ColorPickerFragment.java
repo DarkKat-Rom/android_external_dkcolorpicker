@@ -21,21 +21,16 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 import android.view.LayoutInflater;
@@ -47,14 +42,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.EditText;
-import android.widget.Button;
 import android.widget.CheckedTextView;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import net.darkkatrom.dkcolorpicker.R;
+import net.darkkatrom.dkcolorpicker.data.ColorPickerData;
 import net.darkkatrom.dkcolorpicker.preference.ColorPickerPreference;
 import net.darkkatrom.dkcolorpicker.widget.ApplyColorView;
 import net.darkkatrom.dkcolorpicker.widget.ColorPickerView;
@@ -67,19 +60,10 @@ public class ColorPickerFragment extends Fragment implements
 
     public static final String TAG = "ColorPickerFragment";
 
-    public static final String KEY_TITLE                    = "picker_title";
-    public static final String KEY_SUBTITLE                 = "picker_subtitle";
-    public static final String KEY_INITIAL_COLOR            = "initial_color";
-    public static final String KEY_NEW_COLOR                = "new_color";
-    public static final String KEY_OLD_COLOR                = "old_color";
-    public static final String KEY_RESET_COLOR_1            = "reset_color_1";
-    public static final String KEY_RESET_COLOR_2            = "reset_color_2";
-    public static final String KEY_RESET_COLOR_1_TITLE      = "reset_color_1_Title";
-    public static final String KEY_RESET_COLOR_2_TITLE      = "reset_color_2_Title";
-    public static final String KEY_ALPHA_SLIDER_VISIBLE     = "alpha_slider_visible";
+    public static final String KEY_DATA      = "data";
+    public static final String KEY_NEW_COLOR = "new_color";
 
-    public static final String COLOR_PICKER_FAVORITES        = "color_picker_favorite_";
-    public static final String KEY_HELP_SCREEN_VISIBILITY   = "help_screen_Visibility";
+    public static final String COLOR_PICKER_FAVORITES_BASE = "color_picker_favorite_";
 
     private static final int HELP_SCREEN_VISIBILITY_DEFAULT = 0;
     private static final int HELP_SCREEN_VISIBILITY_VISIBLE = 1;
@@ -96,7 +80,6 @@ public class ColorPickerFragment extends Fragment implements
     private static final int ANIMATE_FAVORITES_VISIBILITY   = 1;
     private static final int ANIMATE_HELP_SCREEN_VISIBILITY = 2;
 
-    private SharedPreferences mPrefs;
     private Resources mResources;
 
     private ApplyColorView mApplyColorAction;
@@ -110,26 +93,14 @@ public class ColorPickerFragment extends Fragment implements
 
     private View mHelpScreen;
     private CheckedTextView mCheckShowHelpScreen;
-    private Button mCloseHelpScreen;
+    private View mCloseHelpScreen;
 
-    private CharSequence mSubtitle;
-    private CharSequence mTitle;
-    private String mPreferenceKey;
-    private int mInitialColor;
-    private int mNewColorValue;
-    private int mOldColorValue;
-    private int mResetColor1;
-    private int mResetColor2;
-    private CharSequence mResetColor1Title;
-    private CharSequence mResetColor2Title;
+    private ColorPickerData mData = null;
+
     private int mBorderColor;
     private boolean mShowFavorites;
     private boolean mShowHelpScreen;
     private boolean mHelpScreenVisible;
-
-    private boolean mHideResetColor1 = true;
-    private boolean mHideResetColor2 = true;
-    private boolean mShowSubMenu = false;
 
 	private float mFullTranslationX;
     private int mFavoritesLayoutHeight = 0;
@@ -138,12 +109,6 @@ public class ColorPickerFragment extends Fragment implements
     private Animator mAnimator;
     private int mApplyColorIconAnimationType;
     private int mAnimationType;
-
-    private OnColorChangedListener mListener;
-
-    public interface OnColorChangedListener {
-        public void onColorChanged(int color);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,13 +121,16 @@ public class ColorPickerFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        return inflateAndSetupView(inflater, container, savedInstanceState);
+        if (savedInstanceState != null) {
+            mData = savedInstanceState.getParcelable(KEY_DATA);
+        } else if (getArguments() != null) {
+            mData = getArguments().getParcelable(KEY_DATA);
+        }
+
+        return inflateAndSetupView(inflater, container);
     }
 
-    private View inflateAndSetupView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    private View inflateAndSetupView(LayoutInflater inflater, ViewGroup container) {
         mResources = getActivity().getResources();
         TypedValue tv = new TypedValue();
 
@@ -173,39 +141,15 @@ public class ColorPickerFragment extends Fragment implements
         mFavoritesLayout = (LinearLayout) mColorPickerView.findViewById(R.id.favorite_buttons);
         mHelpScreen = mColorPickerView.findViewById(R.id.color_picker_help_screen);
 
-        if (getArguments() != null) {
-            mPreferenceKey = getArguments().getString(ColorPickerPreference.PREFERENCE_KEY);
-            mTitle = getArguments().getCharSequence(KEY_TITLE);
-            mSubtitle = getArguments().getCharSequence(KEY_SUBTITLE);
-            mInitialColor = getArguments().getInt(KEY_INITIAL_COLOR);
-            if (getArguments().getInt(KEY_NEW_COLOR) != 0) {
-                mNewColorValue = getArguments().getInt(KEY_NEW_COLOR);
-            } else {
-                mNewColorValue = mInitialColor;
-                getArguments().putInt(KEY_NEW_COLOR, mNewColorValue);
-            }
-            if (getArguments().getInt(KEY_OLD_COLOR) != 0) {
-                mOldColorValue = getArguments().getInt(KEY_OLD_COLOR);
-            } else {
-                mOldColorValue = mInitialColor;
-                getArguments().putInt(KEY_OLD_COLOR, mOldColorValue);
-            }
-            mResetColor1 = getArguments().getInt(KEY_RESET_COLOR_1);
-            mResetColor2 = getArguments().getInt(KEY_RESET_COLOR_2);
-            mResetColor1Title = getArguments().getCharSequence(KEY_RESET_COLOR_1_TITLE);
-            mResetColor2Title = getArguments().getCharSequence(KEY_RESET_COLOR_2_TITLE);
-            mShowHelpScreen = getShowHelpScreen();
-            mHelpScreenVisible = resolveHelpScreenVisibility(
-                    getArguments().getInt(KEY_HELP_SCREEN_VISIBILITY));
-
-        }
+        mShowHelpScreen = getShowHelpScreen();
+        mHelpScreenVisible = resolveHelpScreenVisibility(mData.getHelpScreenVisibility());
 
         if (getActivity().getActionBar() != null) {
-            if (mTitle != null) {
-                getActivity().getActionBar().setTitle(mTitle);
+            if (mData.getPickerTitle() != null) {
+                getActivity().getActionBar().setTitle(mData.getPickerTitle());
             }
-            if (mSubtitle != null) {
-                getActivity().getActionBar().setSubtitle(mSubtitle);
+            if (mData.getPickerSubtitle() != null) {
+                getActivity().getActionBar().setSubtitle(mData.getPickerSubtitle());
             }
         }
 
@@ -220,18 +164,18 @@ public class ColorPickerFragment extends Fragment implements
                 R.dimen.color_picker_action_apply_color_translation_x);
 
         mColorPicker.setOnColorChangedListener(this);
-        mColorPicker.setColor(mNewColorValue);
+        mColorPicker.setColor(mData.getNewColor());
         mColorPicker.setBorderColor(mBorderColor);
 
-        if (getArguments() != null && getArguments().getBoolean(KEY_ALPHA_SLIDER_VISIBLE)) {
-            mColorPicker.setAlphaSliderVisible(true);
+        if (mData.getAlphaSliderVisible()) {
+            mColorPicker.setAlphaSliderVisible(mData.getAlphaSliderVisible());
         }
 
         if (mAnimator == null) {
             mAnimator = createAnimator();
         }
 
-        setUpResetMenuAppearience();
+        mData.setUpResetMenuAppearience();
         setUpFavoriteColorButtons();
         setUpPaletteColorButtons();
         setUpHelpScreen();
@@ -246,24 +190,24 @@ public class ColorPickerFragment extends Fragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if (mHideResetColor1) {
+        if (mData.getHideResetColor1()) {
             menu.removeItem(R.id.reset_colors);
             menu.removeItem(R.id.reset_color);
         } else {
-            if (mShowSubMenu) {
+            if (mData.getShowResetSubMenu()) {
                 menu.removeItem(R.id.reset_color);
-                if (mResetColor1Title != null) {
+                if (mData.getResetColor1Title() != null) {
                     menu.findItem(R.id.reset_colors).getSubMenu()
-                            .findItem(R.id.reset_color1).setTitle(mResetColor1Title);
+                            .findItem(R.id.reset_color1).setTitle(mData.getResetColor1Title());
                 }
-                if (mResetColor2Title != null) {
+                if (mData.getResetColor2Title() != null) {
                     menu.findItem(R.id.reset_colors).getSubMenu()
-                    .findItem(R.id.reset_color2).setTitle(mResetColor2Title);
+                    .findItem(R.id.reset_color2).setTitle(mData.getResetColor2Title());
                 }
             } else {
                 menu.removeItem(R.id.reset_colors);
-                if (mResetColor1Title != null) {
-                    menu.findItem(R.id.reset_color).setTitle(mResetColor1Title);
+                if (mData.getResetColor1Title() != null) {
+                    menu.findItem(R.id.reset_color).setTitle(mData.getResetColor1Title());
                 }
             }
         }
@@ -273,22 +217,22 @@ public class ColorPickerFragment extends Fragment implements
         mShowEditHexAction = menu.findItem(R.id.edit_hex);
         LinearLayout editHexActionView = (LinearLayout) mShowEditHexAction.getActionView();
         mEditHexValue = (EditText) editHexActionView.findViewById(R.id.ab_edit_hex);
-        ImageButton setHexValueButton = (ImageButton) editHexActionView.findViewById(R.id.ab_edit_hex_enter);
+        View setHexValueButton = editHexActionView.findViewById(R.id.ab_edit_hex_enter);
         MenuItem showHideFavorites = menu.findItem(R.id.show_hide_favorites);
         MenuItem showHideHelp = menu.findItem(R.id.show_hide_help);
 
-        boolean newColor = mNewColorValue != mInitialColor;
+        boolean newColor = mData.getNewColor() != mData.getInitialColor();
         int favoritesTitleResId = mShowFavorites
                 ? R.string.hide_favorites_title : R.string.show_favorites_title;
         int helpTitleResId = mHelpScreenVisible ? R.string.hide_help_title : R.string.show_help_title;
 
-        mApplyColorAction.setColor(mNewColorValue);
+        mApplyColorAction.setColor(mData.getNewColor());
         mApplyColorAction.setColorPreviewTranslationX(newColor ? 0f : mFullTranslationX);
         mApplyColorAction.showSetIcon(newColor ? true : false);
         mApplyColorAction.applySetIconAlpha(newColor ? 1f : 0f);
         mApplyColorAction.setOnClickListener(newColor ? this : null);
 
-        mEditHexValue.setText(ColorPickerHelper.convertToARGB(mNewColorValue));
+        mEditHexValue.setText(ColorPickerHelper.convertToARGB(mData.getNewColor()));
         mEditHexValue.setOnFocusChangeListener(this);
         setHexValueButton.setOnClickListener(this);
 
@@ -303,7 +247,7 @@ public class ColorPickerFragment extends Fragment implements
             @Override public void onAnimationUpdate(ValueAnimator animation) {
                 float position = animation.getAnimatedFraction();
                 if (mAnimationType == ANIMATE_COLOR_TRANSITION) {
-                    int blended = ColorPickerHelper.getBlendColor(mOldColorValue, mNewColorValue, position);
+                    int blended = ColorPickerHelper.getBlendColor(mData.getOldColor(), mData.getNewColor(), position);
                     mApplyColorAction.setColor(blended);
                     if (mApplyColorIconAnimationType != NO_ANIMATION) {
                         final boolean animateShow = mApplyColorIconAnimationType == ANIMATE_TO_SHOW;
@@ -369,8 +313,7 @@ public class ColorPickerFragment extends Fragment implements
                             mApplyColorAction.setOnClickListener(getFragmentOnClickListener());
                         }
                     }
-                    mOldColorValue = mNewColorValue;
-                    getArguments().putInt(KEY_NEW_COLOR, mOldColorValue);
+                    mData.setOldColor(mData.getNewColor());
                 } else if (mAnimationType == ANIMATE_FAVORITES_VISIBILITY) {
                     animation.setInterpolator(null);
                     mShowFavorites = !mShowFavorites;
@@ -381,43 +324,13 @@ public class ColorPickerFragment extends Fragment implements
                         mHelpScreen.setVisibility(View.GONE);
                     }
                     mHelpScreenVisible = !mHelpScreenVisible;
-                    getArguments().putInt(KEY_HELP_SCREEN_VISIBILITY, mHelpScreenVisible
+                    mData.setHelpScreenVisibility(mHelpScreenVisible
                             ? HELP_SCREEN_VISIBILITY_VISIBLE : HELP_SCREEN_VISIBILITY_GONE);
                     getActivity().invalidateOptionsMenu();
                 }
             }
         });
         return animator;
-    }
-
-    private void setUpResetMenuAppearience() {
-        if (mResetColor1 == Color.TRANSPARENT) {
-            if (mResetColor2 != Color.TRANSPARENT) {
-                mResetColor2 = Color.TRANSPARENT;
-                Log.w(TAG, "Reset color 1 has not been set, ignore reset color 2 value");
-            }
-            if (mResetColor1Title != null) {
-                mResetColor1Title = null;
-                Log.w(TAG, "Reset color 1 has not been set, ignore reset color 1 title");
-            }
-            if (mResetColor2Title != null) {
-                mResetColor2Title = null;
-                Log.w(TAG, "Reset color 1 has not been set, ignore reset color 2 title");
-            }
-        } else if (mResetColor2 == Color.TRANSPARENT) {
-            if (mResetColor2Title != null) {
-                mResetColor2Title = null;
-                Log.w(TAG, "Reset color 2 has not been set, ignore reset color 2 title");
-            }
-        }
-
-        if (mResetColor1 != 0) {
-            mHideResetColor1 = false;
-            if (mResetColor2 != 0) {
-                mHideResetColor2 = false;
-                mShowSubMenu = true;
-            }
-        }
     }
 
     private void setUpFavoriteColorButtons() {
@@ -504,7 +417,7 @@ public class ColorPickerFragment extends Fragment implements
                 R.id.color_picker_check_show_help_screen);
         mCheckShowHelpScreen.setChecked(!mShowHelpScreen);
         mCheckShowHelpScreen.setOnClickListener(this);
-        mCloseHelpScreen = (Button) mColorPickerView.findViewById(
+        mCloseHelpScreen = mColorPickerView.findViewById(
                 R.id.color_picker_help_button_ok);
         mCloseHelpScreen.setOnClickListener(this);
 
@@ -528,20 +441,16 @@ public class ColorPickerFragment extends Fragment implements
         });
     }
 
-    public void setOnColorChangedListener(OnColorChangedListener listener) {
-        mListener = listener;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.reset_color || item.getItemId() == R.id.reset_color1) {
-            mColorPicker.setColor(mResetColor1, true);
+            mColorPicker.setColor(mData.getResetColor1(), true);
             return true;
         } else if (item.getItemId() == R.id.reset_color2) {
-            mColorPicker.setColor(mResetColor2, true);
+            mColorPicker.setColor(mData.getResetColor2(), true);
             return true;
         } else if (item.getItemId() == R.id.edit_hex) {
-            mEditHexValue.setText(ColorPickerHelper.convertToARGB(mNewColorValue));
+            mEditHexValue.setText(ColorPickerHelper.convertToARGB(mData.getNewColor()));
             return true;
         } else if (item.getItemId() == R.id.show_hide_favorites) {
             mAnimationType = ANIMATE_FAVORITES_VISIBILITY;
@@ -565,7 +474,7 @@ public class ColorPickerFragment extends Fragment implements
         if (v.getId() == R.id.color_picker_apply_color_action_layout) {
             Intent data = new Intent();
             data.putExtra(KEY_NEW_COLOR, mApplyColorAction.getColor());
-            data.putExtra(ColorPickerPreference.PREFERENCE_KEY, mPreferenceKey);
+            data.putExtra(ColorPickerPreference.PREFERENCE_KEY, mData.getPreferenceKey());
             getActivity().setResult(Activity.RESULT_OK, data);
             getActivity().finish();
         } else if (v.getId() == R.id.ab_edit_hex_enter) {
@@ -573,20 +482,18 @@ public class ColorPickerFragment extends Fragment implements
 			mShowEditHexAction.collapseActionView();
             try {
                 int newColor = ColorPickerHelper.convertToColorInt(text);
-                if (newColor != mOldColorValue) {
-                    mNewColorValue = newColor;
-                    mOldColorValue = mNewColorValue;
-                    mColorPicker.setColor(mNewColorValue);
-                    getArguments().putInt(KEY_NEW_COLOR, mNewColorValue);
-                    getArguments().putInt(KEY_OLD_COLOR, mOldColorValue);
-                    if (mNewColorValue != mInitialColor) {
-                        mApplyColorAction.setColor(mNewColorValue);
+                if (newColor != mData.getOldColor()) {
+                    mData.setOldColor(mData.getNewColor());
+                    mData.setNewColor(newColor);
+                    mColorPicker.setColor(mData.getNewColor());
+                    if (mData.getNewColor() != mData.getInitialColor()) {
+                        mApplyColorAction.setColor(mData.getNewColor());
                         mApplyColorAction.setColorPreviewTranslationX(0f);
                         mApplyColorAction.showSetIcon(true);
                         mApplyColorAction.applySetIconAlpha(1f);
                         mApplyColorAction.setOnClickListener(getFragmentOnClickListener());
                     } else {
-                        mApplyColorAction.setColor(mNewColorValue);
+                        mApplyColorAction.setColor(mData.getNewColor());
                         mApplyColorAction.setColorPreviewTranslationX(mFullTranslationX);
                         mApplyColorAction.showSetIcon(false);
                         mApplyColorAction.applySetIconAlpha(0f);
@@ -605,7 +512,7 @@ public class ColorPickerFragment extends Fragment implements
         } else if (v instanceof ColorViewButton) {
             try {
                 int newColor = ((ColorViewButton) v).getColor();
-                if (newColor != mOldColorValue) {
+                if (newColor != mData.getOldColor()) {
                     mColorPicker.setColor(newColor, true);
                 }
             } catch (Exception e) {}
@@ -627,16 +534,15 @@ public class ColorPickerFragment extends Fragment implements
     @Override
     public void onColorChanged(int color) {
         mApplyColorIconAnimationType = NO_ANIMATION;
-        if (color != mOldColorValue) {
-            mNewColorValue = color;
-            getArguments().putInt(KEY_NEW_COLOR, mNewColorValue);
-            if (mNewColorValue == mInitialColor) {
-                if (mOldColorValue != mInitialColor) {
+        if (color != mData.getOldColor()) {
+            mData.setNewColor(color);
+            if (mData.getNewColor() == mData.getInitialColor()) {
+                if (mData.getOldColor() != mData.getInitialColor()) {
                     mApplyColorIconAnimationType = ANIMATE_TO_HIDE;
                     mApplyColorAction.setOnClickListener(null);
                     mApplyColorAction.setClickable(false);
                 }
-            } else if (mOldColorValue == mInitialColor) {
+            } else if (mData.getOldColor() == mData.getInitialColor()) {
                 mApplyColorIconAnimationType = ANIMATE_TO_SHOW;
                 mApplyColorAction.showSetIcon(true);
             }
@@ -698,12 +604,12 @@ public class ColorPickerFragment extends Fragment implements
 
     private void putFavoriteButtonValue(ColorViewButton button) {
         Settings.System.putInt(getActivity().getContentResolver(),
-                COLOR_PICKER_FAVORITES + (String) button.getTag(), button.getColor());
+                COLOR_PICKER_FAVORITES_BASE + (String) button.getTag(), button.getColor());
     }
 
     private int getFavoriteButtonValue(ColorViewButton button) {
         return Settings.System.getInt(getActivity().getContentResolver(),
-                COLOR_PICKER_FAVORITES + (String) button.getTag(), 0);
+                COLOR_PICKER_FAVORITES_BASE + (String) button.getTag(), 0);
     }
 
     private void putShowHelpScreen(boolean show) {
@@ -720,11 +626,17 @@ public class ColorPickerFragment extends Fragment implements
 
     private boolean resolveHelpScreenVisibility(int visibility) {
         if (visibility == HELP_SCREEN_VISIBILITY_DEFAULT) {
-            getArguments().putInt(KEY_HELP_SCREEN_VISIBILITY,
+            mData.setHelpScreenVisibility(
                     mShowHelpScreen ? HELP_SCREEN_VISIBILITY_VISIBLE : HELP_SCREEN_VISIBILITY_GONE);
             return mShowHelpScreen;
         } else {
             return visibility == HELP_SCREEN_VISIBILITY_VISIBLE ? true : false;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(KEY_DATA, mData);
     }
 }
