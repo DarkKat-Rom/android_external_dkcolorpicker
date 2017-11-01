@@ -18,21 +18,19 @@
 
 package net.darkkatrom.dkcolorpicker.preference;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
 import net.darkkatrom.dkcolorpicker.R;
+import net.darkkatrom.dkcolorpicker.data.ColorPickerData;
 import net.darkkatrom.dkcolorpicker.drawable.ColorViewCircleDrawable;
 import net.darkkatrom.dkcolorpicker.fragment.ColorPickerFragment;
 import net.darkkatrom.dkcolorpicker.util.ColorPickerHelper;
@@ -54,8 +52,8 @@ public class ColorPickerPreference extends Preference {
 
     private final Resources mResources;
 
-    private String mPickerSubtitle = null;
     private String mPickerTitle = null;
+    private String mPickerSubtitle = null;
     private int mDefaultValue = Color.BLACK;
     private int mValue;
     private int mResetColor1 = Color.TRANSPARENT;
@@ -63,7 +61,6 @@ public class ColorPickerPreference extends Preference {
     private String mResetColor1Title = null;
     private String mResetColor2Title = null;
     private boolean mAlphaSliderVisible = false;
-    private boolean mShowHelpScreen;
 
     public ColorPickerPreference(Context context) {
         this(context, null);
@@ -86,7 +83,7 @@ public class ColorPickerPreference extends Preference {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(
                     attrs, R.styleable.ColorPickerPreference, defStyleAttr, defStyleRes);
-            mPickerSubtitle = a.getString(R.styleable.ColorPickerPreference_pickerTitle);
+            mPickerTitle = a.getString(R.styleable.ColorPickerPreference_pickerTitle);
             mPickerSubtitle = a.getString(R.styleable.ColorPickerPreference_pickerSubtitle);
             mDefaultValue = a.getColor(R.styleable.ColorPickerPreference_defaultColor,
                     Color.TRANSPARENT);
@@ -159,17 +156,10 @@ public class ColorPickerPreference extends Preference {
     @Override
     public Bundle getExtras() {
         Bundle extras = new Bundle();
-        extras.putString(PREFERENCE_KEY, getKey());
-        extras.putCharSequence(ColorPickerFragment.KEY_TITLE, mPickerTitle);
-        extras.putCharSequence(ColorPickerFragment.KEY_SUBTITLE, mPickerSubtitle);
-        extras.putInt(ColorPickerFragment.KEY_INITIAL_COLOR, mValue);
-        extras.putInt(ColorPickerFragment.KEY_NEW_COLOR, mValue);
-        extras.putInt(ColorPickerFragment.KEY_OLD_COLOR, mValue);
-        extras.putInt(ColorPickerFragment.KEY_RESET_COLOR_1, mResetColor1);
-        extras.putInt(ColorPickerFragment.KEY_RESET_COLOR_2, mResetColor2);
-        extras.putCharSequence(ColorPickerFragment.KEY_RESET_COLOR_1_TITLE, mResetColor1Title);
-        extras.putCharSequence(ColorPickerFragment.KEY_RESET_COLOR_2_TITLE, mResetColor2Title);
-        extras.putBoolean(ColorPickerFragment.KEY_ALPHA_SLIDER_VISIBLE, mAlphaSliderVisible);
+        ColorPickerData data = new ColorPickerData(getKey(), mPickerTitle, mPickerSubtitle, mValue,
+                mResetColor1, mResetColor2, mResetColor1Title, mResetColor2Title, mAlphaSliderVisible);
+        extras.putParcelable(ColorPickerFragment.KEY_DATA, data);
+
         return extras;
     }
 
@@ -200,6 +190,14 @@ public class ColorPickerPreference extends Preference {
             getOnPreferenceChangeListener().onPreferenceChange(this, color);
         } catch (NullPointerException e) {
         }
+    }
+
+    public void setPickerTitle(int titleResId) {
+        mPickerTitle = mResources.getString(titleResId);
+    }
+
+    public void setPickerTitle(String title) {
+        mPickerTitle = title;
     }
 
     public void setPickerSubtitle(int titleResId) {
