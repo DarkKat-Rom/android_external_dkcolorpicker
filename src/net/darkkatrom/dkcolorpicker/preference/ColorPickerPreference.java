@@ -54,6 +54,8 @@ public class ColorPickerPreference extends Preference {
 
     private final Resources mResources;
 
+    private TargetFragment mTargetFragment = null;
+
     private String mPickerSubtitle = null;
     private String mPickerTitle = null;
     private int mDefaultValue = Color.BLACK;
@@ -64,6 +66,10 @@ public class ColorPickerPreference extends Preference {
     private String mResetColor2Title = null;
     private boolean mAlphaSliderVisible = false;
     private boolean mShowHelpScreen;
+
+    public interface TargetFragment {
+        public void pickColor(Bundle extras, int requestCode);
+    }
 
     public ColorPickerPreference(Context context) {
         this(context, null);
@@ -126,7 +132,6 @@ public class ColorPickerPreference extends Preference {
         }
         setLayoutResource(R.layout.preference_color_picker);
         setWidgetLayoutResource(R.layout.preference_widget_color_picker);
-        setFragment(ColorPickerFragment.class.getName());
     }
 
     @Override
@@ -171,6 +176,17 @@ public class ColorPickerPreference extends Preference {
         extras.putCharSequence(ColorPickerFragment.KEY_RESET_COLOR_2_TITLE, mResetColor2Title);
         extras.putBoolean(ColorPickerFragment.KEY_ALPHA_SLIDER_VISIBLE, mAlphaSliderVisible);
         return extras;
+    }
+
+    @Override
+    protected void onClick() {
+        if (mTargetFragment instanceof TargetFragment) {
+            mTargetFragment.pickColor(getExtras(), RESULT_REQUEST_CODE);
+        }
+    }
+
+    public void setTargetFragment(TargetFragment fragment) {
+        mTargetFragment = fragment;
     }
 
     private int getValue() {
