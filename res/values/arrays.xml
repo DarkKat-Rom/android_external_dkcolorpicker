@@ -40,14 +40,14 @@
     </array>
 
     <array name="color_picker_darkkat_palette">
-        <item>@color/black</item>
-        <item>@color/background_darkkat_blue_grey</item>
+        <item>@*android:color/darkkat_blue_grey</item>
+        <item>@*android:color/darkkat_blue_blue_grey</item>
+        <item>@*android:color/accent_darkkat</item>
         <item>@color/holo_blue_light</item>
-        <item>@color/material_deep_teal_500</item>
+        <item>@color/black</item>
         <item>@color/white</item>
+        <item>@color/material_deep_teal_500</item>
         <item>@color/material_indigo_500</item>
-        <item>@color/material_red_500</item>>
-        <item>@color/material_purple_500</item>
     </array>
 
     <array name="color_picker_material_palette">

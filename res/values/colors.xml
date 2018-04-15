@@ -17,7 +17,6 @@
 <resources>
 
     <!-- Color picker -->
-    <color name="background_darkkat_blue_grey">#ff1b1f23</color>
     <color name="color_picker_color_view_drawable_border">#33ffffff</color>
 
     <!-- Colors of the panel view buttons -->
