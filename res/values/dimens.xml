@@ -22,9 +22,6 @@
 
     <!-- Preference -->
 
-    <!-- Width of the color picker preference widget -->
-    <dimen name="color_picker_preference_widget_width">52dp</dimen>
-
     <!-- Width and height of the color picker preference preview -->
     <dimen name="color_picker_preference_preview_width_height">34dp</dimen>
 
