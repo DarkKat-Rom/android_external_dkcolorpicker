@@ -32,6 +32,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
+import net.darkkatrom.dkcolorpicker.ColorPickerActivity;
 import net.darkkatrom.dkcolorpicker.R;
 import net.darkkatrom.dkcolorpicker.drawable.ColorViewCircleDrawable;
 import net.darkkatrom.dkcolorpicker.fragment.ColorPickerFragment;
@@ -55,6 +56,7 @@ public class ColorPickerPreference extends Preference {
     private final Resources mResources;
 
     private TargetFragment mTargetFragment = null;
+    private OwnerActivity mOwnerActivity = null;
 
     private String mPickerSubtitle = null;
     private String mPickerTitle = null;
@@ -69,6 +71,13 @@ public class ColorPickerPreference extends Preference {
 
     public interface TargetFragment {
         public void pickColor(Bundle extras, int requestCode);
+    }
+
+    public interface OwnerActivity {
+        public int getCurentThemeResId();
+        public boolean isWhiteoutTheme();
+        public boolean useOptionalLightStatusBar();
+        public boolean useOptionalLightNavigationBar();
     }
 
     public ColorPickerPreference(Context context) {
@@ -175,6 +184,7 @@ public class ColorPickerPreference extends Preference {
         extras.putCharSequence(ColorPickerFragment.KEY_RESET_COLOR_1_TITLE, mResetColor1Title);
         extras.putCharSequence(ColorPickerFragment.KEY_RESET_COLOR_2_TITLE, mResetColor2Title);
         extras.putBoolean(ColorPickerFragment.KEY_ALPHA_SLIDER_VISIBLE, mAlphaSliderVisible);
+        setThemeExtras(extras);
         return extras;
     }
 
@@ -182,6 +192,24 @@ public class ColorPickerPreference extends Preference {
     protected void onClick() {
         if (mTargetFragment instanceof TargetFragment) {
             mTargetFragment.pickColor(getExtras(), RESULT_REQUEST_CODE);
+        }
+    }
+
+    public void setThemeExtras(Bundle extras) {
+        if (getContext() instanceof OwnerActivity) {
+            OwnerActivity owner = (OwnerActivity) getContext();
+            extras.putInt(ColorPickerActivity.KEY_THEME_RES_ID, owner.getCurentThemeResId());
+            extras.putBoolean(ColorPickerActivity.KEY_IS_WHITEOUT_THEME,
+                    owner.isWhiteoutTheme());
+            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_STATUS_BAR,
+                    owner.useOptionalLightStatusBar());
+            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_NAVIGATION_BAR,
+                    owner.useOptionalLightNavigationBar());
+        } else {
+            extras.putInt(ColorPickerActivity.KEY_THEME_RES_ID, 0);
+            extras.putBoolean(ColorPickerActivity.KEY_IS_WHITEOUT_THEME, false);
+            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_STATUS_BAR, false);
+            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_NAVIGATION_BAR, false);
         }
     }
 
