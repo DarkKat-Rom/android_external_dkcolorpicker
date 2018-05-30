@@ -75,6 +75,24 @@ public class SettingsColorPickerFragment extends PreferenceFragment implements
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity().getActionBar() != null && getSubtitleResId() > 0) {
+            getActivity().getActionBar().setSubtitle(getSubtitleResId());
+        }
+    }
+
+    protected int getSubtitleResId() {
+        return 0;
+    }
+
+    protected void removeSubtitle() {
+        if (getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setSubtitle(null);
+        }
+    }
+
     protected void removePreference(String key) {
         Preference pref = findPreference(key);
         if (pref != null) {
