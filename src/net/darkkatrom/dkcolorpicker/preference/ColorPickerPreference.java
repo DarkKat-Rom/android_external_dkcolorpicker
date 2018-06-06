@@ -74,10 +74,17 @@ public class ColorPickerPreference extends Preference {
     }
 
     public interface OwnerActivity {
-        public int getCurentThemeResId();
+        public int getThemeResId();
+        public boolean customizeColors();
+        public int getStatusBarColor();
+        public int getPrimaryColor();
+        public int getNavigationColor();
+        public boolean colorizeNavigationBar();
+        public boolean lightStatusBar();
+        public boolean lightActionBar();
+        public boolean lightNavigationBar();
         public boolean isWhiteoutTheme();
-        public boolean useOptionalLightStatusBar();
-        public boolean useOptionalLightNavigationBar();
+        public boolean isBlackoutTheme();
     }
 
     public ColorPickerPreference(Context context) {
@@ -198,18 +205,22 @@ public class ColorPickerPreference extends Preference {
     public void setThemeExtras(Bundle extras) {
         if (getContext() instanceof OwnerActivity) {
             OwnerActivity owner = (OwnerActivity) getContext();
-            extras.putInt(ColorPickerActivity.KEY_THEME_RES_ID, owner.getCurentThemeResId());
-            extras.putBoolean(ColorPickerActivity.KEY_IS_WHITEOUT_THEME,
-                    owner.isWhiteoutTheme());
-            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_STATUS_BAR,
-                    owner.useOptionalLightStatusBar());
+            extras.putInt(ColorPickerActivity.KEY_THEME_RES_ID, owner.getThemeResId());
+            extras.putBoolean(ColorPickerActivity.KEY_CUSTOMIZE_COLORS, owner.customizeColors());
+            extras.putInt(ColorPickerActivity.KEY_STATUS_BAR_COLOR, owner.getStatusBarColor());
+            extras.putInt(ColorPickerActivity.KEY_PRIMARY_COLOR, owner.getPrimaryColor());
+            extras.putInt(ColorPickerActivity.KEY_NAVIGATION_BAR_COLOR, owner.getNavigationColor());
+            extras.putBoolean(ColorPickerActivity.KEY_COLORIZE_NAVIGATION_BAR,
+                    owner.colorizeNavigationBar());
+            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_STATUS_BAR, owner.lightStatusBar());
+            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_ACTION_BAR, owner.lightStatusBar());
             extras.putBoolean(ColorPickerActivity.KEY_LIGHT_NAVIGATION_BAR,
-                    owner.useOptionalLightNavigationBar());
+                    owner.lightNavigationBar());
+            extras.putBoolean(ColorPickerActivity.KEY_IS_WHITEOUT_THEME, owner.isWhiteoutTheme());
+            extras.putBoolean(ColorPickerActivity.KEY_IS_BLACKOUT_THEME, owner.isBlackoutTheme());
+
         } else {
             extras.putInt(ColorPickerActivity.KEY_THEME_RES_ID, 0);
-            extras.putBoolean(ColorPickerActivity.KEY_IS_WHITEOUT_THEME, false);
-            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_STATUS_BAR, false);
-            extras.putBoolean(ColorPickerActivity.KEY_LIGHT_NAVIGATION_BAR, false);
         }
     }
 

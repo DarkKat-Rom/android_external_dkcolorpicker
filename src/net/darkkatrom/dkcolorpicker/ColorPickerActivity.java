@@ -19,17 +19,35 @@ package net.darkkatrom.dkcolorpicker;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+
+import com.android.internal.util.darkkat.ThemeColorHelper;
 
 import net.darkkatrom.dkcolorpicker.fragment.ColorPickerFragment;
 import net.darkkatrom.dkcolorpicker.preference.ColorPickerPreference;
 
 public class ColorPickerActivity extends Activity {
-    public static final String KEY_THEME_RES_ID         = "theme_res_id";
-    public static final String KEY_IS_WHITEOUT_THEME    = "is_whiteout_theme";
-    public static final String KEY_LIGHT_STATUS_BAR     = "light_status_bar";
-    public static final String KEY_LIGHT_NAVIGATION_BAR = "light_navigation_bar";
+    public static final String KEY_THEME_RES_ID            = "theme_res_id";
+    public static final String KEY_CUSTOMIZE_COLORS        = "customize_colors";
+    public static final String KEY_STATUS_BAR_COLOR        = "status_bar_color";
+    public static final String KEY_PRIMARY_COLOR           = "primary_color";
+    public static final String KEY_NAVIGATION_BAR_COLOR    = "navigation_bar_color";
+    public static final String KEY_COLORIZE_NAVIGATION_BAR = "colorize_navigation_bar";
+    public static final String KEY_LIGHT_STATUS_BAR        = "light_status_bar";
+    public static final String KEY_LIGHT_ACTION_BAR        = "light_action_bar";
+    public static final String KEY_LIGHT_NAVIGATION_BAR    = "light_navigation_bar";
+    public static final String KEY_IS_WHITEOUT_THEME       = "is_whiteout_theme";
+    public static final String KEY_IS_BLACKOUT_THEME       = "is_blackout_theme";
+
+    private int mThemeResId = 0;
+    private boolean mCustomizeColors = false;
+    private int mPrimaryColor = 0;
+    private boolean mColorizeNavigationBar = false;
+    private boolean mLightStatusBar = false;
+    private boolean mLightActionBar = false;
+    private boolean mLightNavigationBar = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +57,9 @@ public class ColorPickerActivity extends Activity {
             Fragment f = new ColorPickerFragment();
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                int themeResId = extras.getInt(KEY_THEME_RES_ID, 0);
+                mThemeResId = extras.getInt(KEY_THEME_RES_ID, 0);
                 f.setArguments(extras);
-                if (themeResId > 0) {
+                if (mThemeResId > 0) {
                     updateTheme(extras);
                 }
             }
@@ -57,31 +75,31 @@ public class ColorPickerActivity extends Activity {
     }
 
     public void updateTheme(Bundle extras) {
-        int themeResId = extras.getInt(KEY_THEME_RES_ID, 0);
+        mCustomizeColors = extras.getBoolean(KEY_CUSTOMIZE_COLORS, false);
+        int statusBarColor = extras.getInt(KEY_STATUS_BAR_COLOR, 0);
+        mPrimaryColor = extras.getInt(KEY_PRIMARY_COLOR, 0);
+        int navigationColor = extras.getInt(KEY_NAVIGATION_BAR_COLOR, 0);
+        mColorizeNavigationBar = extras.getBoolean(KEY_COLORIZE_NAVIGATION_BAR, false);
+        mLightStatusBar = extras.getBoolean(KEY_LIGHT_STATUS_BAR, false);
+        mLightActionBar = extras.getBoolean(KEY_LIGHT_ACTION_BAR, false);
+        mLightNavigationBar = extras.getBoolean(KEY_LIGHT_NAVIGATION_BAR, false);
         boolean isWhiteoutTheme = extras.getBoolean(KEY_IS_WHITEOUT_THEME, false);
-        boolean lightStatusBar = extras.getBoolean(KEY_LIGHT_STATUS_BAR, false);
-        boolean lightNavigationBar = extras.getBoolean(KEY_LIGHT_NAVIGATION_BAR,
-                false);
+        boolean isBlackoutTheme = extras.getBoolean(KEY_IS_BLACKOUT_THEME, false);
 
-        setTheme(themeResId);
+        setTheme(mThemeResId);
 
         int oldFlags = getWindow().getDecorView().getSystemUiVisibility();
         int newFlags = oldFlags;
-        if (!lightStatusBar) {
-            // Possibly we are using the Whiteout theme
+        if (!mLightStatusBar) {
             boolean isLightStatusBar = (newFlags & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
                     == View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            // Check if light status bar flag was set,
-            // and we are not using the Whiteout theme,
-            // (Whiteout theme should always use a light status bar).
-            if (isLightStatusBar && !isWhiteoutTheme) {
+            // Check if light status bar flag was set.
+            if (isLightStatusBar) {
                 // Remove flag
                 newFlags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             }
         }
-        if (lightNavigationBar) {
-            newFlags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
-        } else {
+        if (!mLightNavigationBar) {
             // Check if light navigation bar flag was set
             boolean isLightNavigationBar = (newFlags & View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR)
                     == View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
@@ -92,6 +110,36 @@ public class ColorPickerActivity extends Activity {
         }
         if (oldFlags != newFlags) {
             getWindow().getDecorView().setSystemUiVisibility(newFlags);
+        }
+
+        if (mCustomizeColors && !isBlackoutTheme && !isWhiteoutTheme) {
+            getWindow().setStatusBarColor(statusBarColor);
+            getActionBar().setBackgroundDrawable(new ColorDrawable(mPrimaryColor));
+        }
+        if (navigationColor != 0) {
+            getWindow().setNavigationBarColor(navigationColor);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mThemeResId > 0) {
+            boolean customizeColors = ThemeColorHelper.customizeColors(this);
+            int primaryColor = ThemeColorHelper.getPrimaryColor(this, 0xff2196f3);
+            boolean colorizeNavigationBar = ThemeColorHelper.colorizeNavigationBar(this);
+            boolean lightStatusBar = ThemeColorHelper.lightStatusBar(this, 0xff2196f3);
+            boolean lightActionBar = ThemeColorHelper.lightActionBar(this, 0xff2196f3);
+            boolean lightNavigationBar = ThemeColorHelper.lightNavigationBar(this, 0xff2196f3);
+
+            if (mCustomizeColors != customizeColors
+                    || mPrimaryColor != primaryColor
+                    || mColorizeNavigationBar != colorizeNavigationBar
+                    || mLightStatusBar != lightStatusBar
+                    || mLightActionBar != lightActionBar
+                    || mLightNavigationBar != lightNavigationBar) {
+                recreate();
+            }
         }
     }
 }
