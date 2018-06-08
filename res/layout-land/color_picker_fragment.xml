@@ -21,10 +21,21 @@
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground">
 
+    <TextView
+        android:id="@+id/color_picker_additional_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="12dp"
+        android:textSize="16sp"
+        android:textColor="?android:attr/colorAccent"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/color_picker_additional_subtitle"
         android:orientation="horizontal">
 
         <net.darkkatrom.dkcolorpicker.widget.ColorPickerView 

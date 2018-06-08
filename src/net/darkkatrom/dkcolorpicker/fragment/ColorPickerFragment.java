@@ -69,6 +69,7 @@ public class ColorPickerFragment extends Fragment implements
 
     public static final String KEY_TITLE                    = "picker_title";
     public static final String KEY_SUBTITLE                 = "picker_subtitle";
+    public static final String KEY_ADDITIONAL_SUBTITLE      = "picker_additional_subtitle";
     public static final String KEY_INITIAL_COLOR            = "initial_color";
     public static final String KEY_NEW_COLOR                = "new_color";
     public static final String KEY_OLD_COLOR                = "old_color";
@@ -104,6 +105,7 @@ public class ColorPickerFragment extends Fragment implements
     private EditText mEditHexValue;
 
     private View mColorPickerView;
+    private TextView mAdditionalSubtitleView;
     private ColorPickerView mColorPicker;
     private LinearLayout mColorButtonsLayout;
     private LinearLayout mFavoritesLayout;
@@ -112,8 +114,9 @@ public class ColorPickerFragment extends Fragment implements
     private CheckedTextView mCheckShowHelpScreen;
     private Button mCloseHelpScreen;
 
-    private CharSequence mSubtitle;
     private CharSequence mTitle;
+    private CharSequence mSubtitle;
+    private CharSequence mAdditionalSubtitle;
     private String mPreferenceKey;
     private int mInitialColor;
     private int mNewColorValue;
@@ -167,6 +170,7 @@ public class ColorPickerFragment extends Fragment implements
         TypedValue tv = new TypedValue();
 
         mColorPickerView = inflater.inflate(R.layout.color_picker_fragment, container, false);
+        mAdditionalSubtitleView = (TextView) mColorPickerView.findViewById(R.id.color_picker_additional_subtitle);
         mColorPicker = (ColorPickerView) mColorPickerView.findViewById(R.id.color_picker_view);
         mColorButtonsLayout = (LinearLayout) mColorPickerView.findViewById(
                 R.id.color_picker_color_buttons_layout);
@@ -177,6 +181,7 @@ public class ColorPickerFragment extends Fragment implements
             mPreferenceKey = getArguments().getString(ColorPickerPreference.PREFERENCE_KEY);
             mTitle = getArguments().getCharSequence(KEY_TITLE);
             mSubtitle = getArguments().getCharSequence(KEY_SUBTITLE);
+            mAdditionalSubtitle = getArguments().getCharSequence(KEY_ADDITIONAL_SUBTITLE);
             mInitialColor = getArguments().getInt(KEY_INITIAL_COLOR);
             if (getArguments().getInt(KEY_NEW_COLOR) != 0) {
                 mNewColorValue = getArguments().getInt(KEY_NEW_COLOR);
@@ -218,6 +223,11 @@ public class ColorPickerFragment extends Fragment implements
 
 		mFullTranslationX = mResources.getDimension(
                 R.dimen.color_picker_action_apply_color_translation_x);
+
+        if (mAdditionalSubtitle != null) {
+            mAdditionalSubtitleView.setVisibility(View.VISIBLE);
+            mAdditionalSubtitleView.setText(mAdditionalSubtitle);
+        }
 
         mColorPicker.setOnColorChangedListener(this);
         mColorPicker.setColor(mNewColorValue);

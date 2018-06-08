@@ -19,6 +19,7 @@
     <declare-styleable name="ColorPickerPreference">
         <attr name="pickerTitle" format="string" />
         <attr name="pickerSubtitle" format="string" />
+        <attr name="pickerAdditionalSubtitle" format="string" />
         <attr name="defaultColor" format="color" />
         <attr name="resetColor1" format="color" />
         <attr name="resetColor2" format="color" />
