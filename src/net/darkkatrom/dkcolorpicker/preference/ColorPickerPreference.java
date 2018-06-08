@@ -60,6 +60,7 @@ public class ColorPickerPreference extends Preference {
 
     private String mPickerTitle = null;
     private String mPickerSubtitle = null;
+    private String mPickerAdditionalSubtitle = null;
     private int mDefaultValue = Color.BLACK;
     private int mValue;
     private int mResetColor1 = Color.TRANSPARENT;
@@ -110,6 +111,8 @@ public class ColorPickerPreference extends Preference {
                     attrs, R.styleable.ColorPickerPreference, defStyleAttr, defStyleRes);
             mPickerTitle = a.getString(R.styleable.ColorPickerPreference_pickerTitle);
             mPickerSubtitle = a.getString(R.styleable.ColorPickerPreference_pickerSubtitle);
+            mPickerAdditionalSubtitle =
+                    a.getString(R.styleable.ColorPickerPreference_pickerAdditionalSubtitle);
             mDefaultValue = a.getColor(R.styleable.ColorPickerPreference_defaultColor,
                     Color.TRANSPARENT);
             mResetColor1 = a.getColor(R.styleable.ColorPickerPreference_resetColor1,
@@ -183,6 +186,7 @@ public class ColorPickerPreference extends Preference {
         extras.putString(PREFERENCE_KEY, getKey());
         extras.putCharSequence(ColorPickerFragment.KEY_TITLE, mPickerTitle);
         extras.putCharSequence(ColorPickerFragment.KEY_SUBTITLE, mPickerSubtitle);
+        extras.putCharSequence(ColorPickerFragment.KEY_ADDITIONAL_SUBTITLE, mPickerAdditionalSubtitle);
         extras.putInt(ColorPickerFragment.KEY_INITIAL_COLOR, mValue);
         extras.putInt(ColorPickerFragment.KEY_NEW_COLOR, mValue);
         extras.putInt(ColorPickerFragment.KEY_OLD_COLOR, mValue);
@@ -272,6 +276,14 @@ public class ColorPickerPreference extends Preference {
 
     public void setPickerSubtitle(String title) {
         mPickerSubtitle = title;
+    }
+
+    public void setPickerAdditionalSubtitle(int titleResId) {
+        mPickerAdditionalSubtitle = mResources.getString(titleResId);
+    }
+
+    public void setPickerAdditionalSubtitle(String title) {
+        mPickerAdditionalSubtitle = title;
     }
 
     public void setResetColors(int resetColor1, int resetColor2) {
