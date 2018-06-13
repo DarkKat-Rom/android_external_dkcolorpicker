@@ -67,6 +67,14 @@
 
     <!-- Fragment -->
 
+    <!-- Color picker additional subtile view -->
+
+    <!-- Top padding of the additional subtitle -->
+    <dimen name="color_picker_additional_subtitle_padding_top">12dp</dimen>
+
+    <!-- Text size of the additional subtitle -->
+    <dimen name="color_picker_additional_subtitle_text_size">16sp</dimen>
+
     <!-- Color picker view -->
 
     <!-- Marging of the color picker view -->
