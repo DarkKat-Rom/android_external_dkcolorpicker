@@ -27,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:paddingTop="12dp"
-        android:textSize="16sp"
+        android:paddingTop="@dimen/color_picker_additional_subtitle_padding_top"
+        android:textSize="@dimen/color_picker_additional_subtitle_text_size"
         android:textColor="?android:attr/colorAccent"
         android:visibility="gone" />
 
