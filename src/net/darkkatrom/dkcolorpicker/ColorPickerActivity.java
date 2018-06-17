@@ -29,17 +29,18 @@ import net.darkkatrom.dkcolorpicker.fragment.ColorPickerFragment;
 import net.darkkatrom.dkcolorpicker.preference.ColorPickerPreference;
 
 public class ColorPickerActivity extends Activity {
-    public static final String KEY_THEME_RES_ID            = "theme_res_id";
-    public static final String KEY_CUSTOMIZE_COLORS        = "customize_colors";
-    public static final String KEY_STATUS_BAR_COLOR        = "status_bar_color";
-    public static final String KEY_PRIMARY_COLOR           = "primary_color";
-    public static final String KEY_NAVIGATION_BAR_COLOR    = "navigation_bar_color";
-    public static final String KEY_COLORIZE_NAVIGATION_BAR = "colorize_navigation_bar";
-    public static final String KEY_LIGHT_STATUS_BAR        = "light_status_bar";
-    public static final String KEY_LIGHT_ACTION_BAR        = "light_action_bar";
-    public static final String KEY_LIGHT_NAVIGATION_BAR    = "light_navigation_bar";
-    public static final String KEY_IS_WHITEOUT_THEME       = "is_whiteout_theme";
-    public static final String KEY_IS_BLACKOUT_THEME       = "is_blackout_theme";
+    public static final String KEY_THEME_RES_ID                = "theme_res_id";
+    public static final String KEY_CUSTOMIZE_COLORS            = "customize_colors";
+    public static final String KEY_STATUS_BAR_COLOR            = "status_bar_color";
+    public static final String KEY_PRIMARY_COLOR               = "primary_color";
+    public static final String KEY_NAVIGATION_BAR_COLOR        = "navigation_bar_color";
+    public static final String KEY_COLORIZE_NAVIGATION_BAR     = "colorize_navigation_bar";
+    public static final String KEY_LIGHT_STATUS_BAR            = "light_status_bar";
+    public static final String KEY_LIGHT_ACTION_BAR            = "light_action_bar";
+    public static final String KEY_LIGHT_NAVIGATION_BAR        = "light_navigation_bar";
+    public static final String KEY_IS_WHITEOUT_THEME           = "is_whiteout_theme";
+    public static final String KEY_IS_BLACKOUT_THEME           = "is_blackout_theme";
+    public static final String KEY_THEME_OVERLAY_ACCENT_RES_ID = "theme_res_id";
 
     private int mThemeResId = 0;
     private boolean mCustomizeColors = false;
@@ -48,6 +49,7 @@ public class ColorPickerActivity extends Activity {
     private boolean mLightStatusBar = false;
     private boolean mLightActionBar = false;
     private boolean mLightNavigationBar = false;
+    private int mThemeOverlayAccentResId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,11 @@ public class ColorPickerActivity extends Activity {
         boolean isBlackoutTheme = extras.getBoolean(KEY_IS_BLACKOUT_THEME, false);
 
         setTheme(mThemeResId);
+
+        mThemeOverlayAccentResId = extras.getInt(KEY_THEME_OVERLAY_ACCENT_RES_ID, 0);
+        if (mThemeOverlayAccentResId > 0) {
+            getTheme().applyStyle(mThemeOverlayAccentResId, true);
+        }
 
         int oldFlags = getWindow().getDecorView().getSystemUiVisibility();
         int newFlags = oldFlags;
@@ -131,8 +138,10 @@ public class ColorPickerActivity extends Activity {
             boolean lightStatusBar = ThemeColorHelper.lightStatusBar(this, 0xff2196f3);
             boolean lightActionBar = ThemeColorHelper.lightActionBar(this, 0xff2196f3);
             boolean lightNavigationBar = ThemeColorHelper.lightNavigationBar(this, 0xff2196f3);
+            int themeOverlayAccentResId = ThemeColorHelper.getThemeOverlayAccentResId(this);
 
-            if (mCustomizeColors != customizeColors
+            if (mThemeOverlayAccentResId != themeOverlayAccentResId
+                    || mCustomizeColors != customizeColors
                     || mPrimaryColor != primaryColor
                     || mColorizeNavigationBar != colorizeNavigationBar
                     || mLightStatusBar != lightStatusBar

@@ -86,6 +86,7 @@ public class ColorPickerPreference extends Preference {
         public boolean lightNavigationBar();
         public boolean isWhiteoutTheme();
         public boolean isBlackoutTheme();
+        public int getThemeOverlayAccentResId();
     }
 
     public ColorPickerPreference(Context context) {
@@ -222,7 +223,8 @@ public class ColorPickerPreference extends Preference {
                     owner.lightNavigationBar());
             extras.putBoolean(ColorPickerActivity.KEY_IS_WHITEOUT_THEME, owner.isWhiteoutTheme());
             extras.putBoolean(ColorPickerActivity.KEY_IS_BLACKOUT_THEME, owner.isBlackoutTheme());
-
+            extras.putInt(ColorPickerActivity.KEY_THEME_OVERLAY_ACCENT_RES_ID,
+                    owner.getThemeOverlayAccentResId());
         } else {
             extras.putInt(ColorPickerActivity.KEY_THEME_RES_ID, 0);
         }
