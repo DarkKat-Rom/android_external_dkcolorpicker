@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
-     Copyright (C) 2016 DarkKat
+     Copyright (C) 2018 DarkKat
 
      Licensed under the Apache License, Version 2.0 (the "License"); 
      you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
      limitations under the License.
 -->
 
-<net.darkkatrom.dkcolorpicker.widget.ColorViewButton
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/color_picker_widget"
+    android:id="@+id/color_picker_list_widget"
     android:layout_width="@dimen/color_picker_preference_widget_width"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/color_picker_preference_widget_padding_top_bottom"
@@ -26,17 +26,18 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/color_button_color"
-        android:layout_width="@dimen/color_picker_preference_preview_width_height"
-        android:layout_height="@dimen/color_picker_preference_preview_width_height"
+        android:id="@+id/color_picker_list_widget_icon"
+        android:layout_width="@dimen/color_picker_preference_widget_icon_size"
+        android:layout_height="@dimen/color_picker_preference_widget_icon_size"
+        android:src="@drawable/ic_color_picker_list"
         android:scaleType="centerCrop" />
 
     <TextView
-        android:id="@+id/color_button_hex"
+        android:id="@+id/color_picker_list_widget_hex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/color_picker_preference_widget_text_margin_top"
         android:textSize="@dimen/color_picker_preference_widget_text_size"
         android:textColor="?android:attr/textColorSecondary" />
 
-</net.darkkatrom.dkcolorpicker.widget.ColorViewButton>
+</LinearLayout>

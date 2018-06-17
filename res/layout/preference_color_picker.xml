@@ -31,27 +31,27 @@
         android:id="@android:id/icon_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="-4dp"
-        android:minWidth="60dp"
+        android:layout_marginStart="@dimen/color_picker_preference_icon_frame_margin_start"
+        android:minWidth="@dimen/color_picker_preference_icon_frame_min_width"
         android:gravity="start|center_vertical"
         android:orientation="horizontal"
-        android:paddingEnd="12dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp">
+        android:paddingEnd="@dimen/color_picker_preference_icon_frame_padding_end"
+        android:paddingTop="@dimen/color_picker_preference_icon_frame_padding_top_bottom"
+        android:paddingBottom="@dimen/color_picker_preference_icon_frame_padding_top_bottom">
         <com.android.internal.widget.PreferenceImageView
             android:id="@android:id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="48dp"
-            android:maxHeight="48dp" />
+            android:maxWidth="@dimen/color_picker_preference_icon_mah_width_height"
+            android:maxHeight="@dimen/color_picker_preference_icon_mah_width_height" />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:paddingTop="@dimen/color_picker_preference_title_layout_padding_top_bottom"
+        android:paddingBottom="@dimen/color_picker_preference_title_layout_padding_top_bottom">
 
         <TextView android:id="@android:id/title"
             android:layout_width="wrap_content"
@@ -77,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="end|center_vertical"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/color_picker_preference_widget_frame_padding_start"
         android:orientation="vertical" />
 
 </LinearLayout>
