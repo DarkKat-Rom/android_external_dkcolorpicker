@@ -27,8 +27,8 @@
 
     <ImageView
         android:id="@+id/color_picker_list_widget_icon"
-        android:layout_width="@dimen/color_picker_preference_preview_width_height"
-        android:layout_height="@dimen/color_picker_preference_preview_width_height"
+        android:layout_width="@dimen/color_picker_preference_widget_icon_size"
+        android:layout_height="@dimen/color_picker_preference_widget_icon_size"
         android:src="@drawable/ic_color_picker_list"
         android:scaleType="centerCrop" />
 
@@ -36,8 +36,8 @@
         android:id="@+id/color_picker_list_widget_hex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="@dimen/color_picker_color_button_value_text_size"
+        android:layout_marginTop="@dimen/color_picker_preference_widget_text_margin_top"
+        android:textSize="@dimen/color_picker_preference_widget_text_size"
         android:textColor="?android:attr/textColorSecondary" />
 
 </LinearLayout>

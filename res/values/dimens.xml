@@ -28,6 +28,15 @@
     <!-- Width and height of the color picker preference preview -->
     <dimen name="color_picker_preference_preview_width_height">34dp</dimen>
 
+    <!-- Size of the color picker preference widget icon -->
+    <dimen name="color_picker_preference_widget_icon_size">24dp</dimen>
+
+    <!-- Top margin of the color picker preference widget text -->
+    <dimen name="color_picker_preference_widget_text_margin_top">6dp</dimen>
+
+    <!-- Text size of the color picker preference widget text -->
+    <dimen name="color_picker_preference_widget_text_size">10sp</dimen>
+
     <!-- General -->
 
     <!-- Size of the color picker buttons -->
