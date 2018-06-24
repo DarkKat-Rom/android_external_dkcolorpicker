@@ -16,13 +16,20 @@
 
 package net.darkkatrom.dkcolorpicker.preference;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.preference.ListPreference;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,10 +38,14 @@ import net.darkkatrom.dkcolorpicker.R;
 import net.darkkatrom.dkcolorpicker.util.ColorPickerHelper;
 import net.darkkatrom.dkcolorpicker.widget.ColorViewButton;
 
-public class ColorPickerListPreference extends ListPreference {
+public class ColorPickerListPreference extends ListPreference implements
+        ColorPickerListAdapter.OnItemClickedListener {
 
     boolean mNeedEntryColors;
     private CharSequence[] mEntryColors;
+
+    private ColorPickerListAdapter mAdapter;
+    private int mClickedDialogItem;
 
     public ColorPickerListPreference(Context context) {
         this(context, null);
@@ -63,6 +74,8 @@ public class ColorPickerListPreference extends ListPreference {
             }
             a.recycle();
         }
+        setPositiveButtonText(R.string.dialog_ok);
+        setNegativeButtonText(R.string.dialog_cancel);
         setLayoutResource(R.layout.preference_color_picker);
         setWidgetLayoutResource(R.layout.preference_widget_color_picker_list);
     }
@@ -80,6 +93,55 @@ public class ColorPickerListPreference extends ListPreference {
                 icon.setImageTintList(ColorStateList.valueOf(entryColor));
             }
             hex.setText(getEntryColor());
+        }
+    }
+
+    @Override
+    protected void onPrepareDialogBuilder(Builder builder) {
+        if (getEntries() == null || getEntryValues() == null) {
+            throw new IllegalStateException(
+                    "ListPreference requires an entries array and an entryValues array.");
+        }
+
+        View view = LayoutInflater.from(builder.getContext()).inflate(
+                R.layout.color_picker_dialog_list, null, false);
+        View dividerTop = view.findViewById(R.id.color_picker_dialog_list_divider_top);
+        View dividerBottom = view.findViewById(R.id.color_picker_dialog_list_divider_bottom);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.color_picker_dialog_list);
+        mAdapter = new ColorPickerListAdapter(getContext(), dividerTop, dividerBottom, getEntries(),
+                getEntryColors(), findIndexOfValue(getValue()));
+        mAdapter.setOnItemClickedListener(this);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setAdapter(mAdapter);
+        llm.scrollToPosition(findIndexOfValue(getValue()));
+        builder.setView(view);
+    }
+
+    @Override
+    protected void showDialog(Bundle state) {
+        super.showDialog(state);
+        ((AlertDialog) getDialog()).getButton(
+                AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        mClickedDialogItem = position;
+        ((AlertDialog) getDialog()).getButton(
+                AlertDialog.BUTTON_POSITIVE).setEnabled(findIndexOfValue(getValue()) != position);
+    }
+
+    @Override
+    protected void onDialogClosed(boolean positiveResult) {
+        super.onDialogClosed(positiveResult);
+
+        mAdapter.setOnItemClickedListener(null);
+        if (positiveResult && mClickedDialogItem >= 0 && getEntryValues() != null) {
+            String value = getEntryValues()[mClickedDialogItem].toString();
+            if (callChangeListener(value)) {
+                setValue(value);
+            }
         }
     }
 

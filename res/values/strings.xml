@@ -33,6 +33,10 @@
     <string name="show_help_title">Show help</string>
     <string name="empty_title">Empty</string>
 
+    <!-- Color picker dialog -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
     <!-- Color picker help screen -->
     <string name="color_picker_help_screen_title">Color Picker help</string>
     <string name="color_picker_help_ab_title">Action bar:</string>

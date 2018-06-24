@@ -32,6 +32,10 @@
     <string name="show_help_title">Hilfe anzeigen</string>
     <string name="empty_title">Leer</string>
 
+    <!-- Color picker dialog -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Abbrechen</string>
+
     <!-- Color picker help screen -->
     <string name="color_picker_help_screen_title">Farbauswahl Hilfe</string>
     <string name="color_picker_help_ab_title">Actionsleiste:</string>
