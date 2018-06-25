@@ -43,8 +43,8 @@
         android:layout_width="@dimen/color_picker_preference_widget_width"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="@dimen/color_picker_dialog_list_item_preview_padding_top_bottom"
+        android:paddingBottom="@dimen/color_picker_dialog_list_item_preview_padding_top_bottom"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 

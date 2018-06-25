@@ -15,15 +15,36 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- Color picker -->
+    <!-- Preferences -->
 
-    <!-- Width of the color picker color view drawable border -->
-    <dimen name="color_picker_color_view_drawable_border_width">1dp</dimen>
+    <!-- Start margin of the color picker preference icon frame -->
+    <dimen name="color_picker_preference_icon_frame_margin_start">-4dp</dimen>
 
-    <!-- Preference -->
+    <!-- Minimum width of the color picker preference icon frame -->
+    <dimen name="color_picker_preference_icon_frame_min_width">60dp</dimen>
+
+    <!-- End padding of the color picker preference icon frame -->
+    <dimen name="color_picker_preference_icon_frame_padding_end">12dp</dimen>
+
+    <!-- Top and bottom padding of the color picker preference icon frame -->
+    <dimen name="color_picker_preference_icon_frame_padding_top_bottom">4dp</dimen>
+
+    <!-- Maximum width and height of the color picker preference icon -->
+    <dimen name="color_picker_preference_icon_mah_width_height">48dp</dimen>
+
+    <!-- Top and bottom padding of the color picker preference title layout -->
+    <dimen name="color_picker_preference_title_layout_padding_top_bottom">4dp</dimen>
+
+    <!-- Start padding of the color picker preference widget frame -->
+    <dimen name="color_picker_preference_widget_frame_padding_start">16dp</dimen>
+
+    <!-- Preferences (widgets) -->
 
     <!-- Width of the color picker preference widget -->
     <dimen name="color_picker_preference_widget_width">52dp</dimen>
+
+    <!-- Top and bottom padding of the color picker preference widget -->
+    <dimen name="color_picker_preference_widget_padding_top_bottom">8dp</dimen>
 
     <!-- Width and height of the color picker preference preview -->
     <dimen name="color_picker_preference_preview_width_height">34dp</dimen>
@@ -36,6 +57,12 @@
 
     <!-- Text size of the color picker preference widget text -->
     <dimen name="color_picker_preference_widget_text_size">10sp</dimen>
+
+    <!-- Top padding of the color picker dialog list -->
+    <dimen name="color_picker_dialog_list_padding_top">7dp</dimen>
+
+    <!-- Top and bottom padding of the color picker dialog list item preview -->
+    <dimen name="color_picker_dialog_list_item_preview_padding_top_bottom">8dp</dimen>
 
     <!-- Top padding of the first item in the color picker dialog list -->
     <dimen name="color_picker_dialog_list_first_item_padding_top">8dp</dimen>
@@ -51,6 +78,9 @@
 
     <!-- Size of the color picker buttons drawable -->
     <dimen name="color_picker_button_drawable_size">26dp</dimen>
+
+    <!-- Width of the color picker color view drawable border -->
+    <dimen name="color_picker_color_view_drawable_border_width">1dp</dimen>
 
     <!-- Padding of the color picker buttons -->
     <dimen name="color_picker_button_padding">11dp</dimen>

@@ -20,8 +20,8 @@
     android:id="@+id/color_picker_list_widget"
     android:layout_width="@dimen/color_picker_preference_widget_width"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
+    android:paddingTop="@dimen/color_picker_preference_widget_padding_top_bottom"
+    android:paddingBottom="@dimen/color_picker_preference_widget_padding_top_bottom"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
