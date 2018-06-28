@@ -24,6 +24,8 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.ListPreference;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,8 +46,8 @@ public class ColorPickerListPreference extends ListPreference implements
     boolean mNeedEntryColors;
     private CharSequence[] mEntryColors;
 
-    private ColorPickerListAdapter mAdapter;
-    private int mClickedDialogItem;
+    private RecyclerView mRecyclerView = null;
+    private int mClickedDialogItem = -1;
 
     public ColorPickerListPreference(Context context) {
         this(context, null);
@@ -107,14 +109,15 @@ public class ColorPickerListPreference extends ListPreference implements
                 R.layout.color_picker_dialog_list, null, false);
         View dividerTop = view.findViewById(R.id.color_picker_dialog_list_divider_top);
         View dividerBottom = view.findViewById(R.id.color_picker_dialog_list_divider_bottom);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.color_picker_dialog_list);
-        mAdapter = new ColorPickerListAdapter(getContext(), dividerTop, dividerBottom, getEntries(),
-                getEntryColors(), findIndexOfValue(getValue()));
-        mAdapter.setOnItemClickedListener(this);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(llm);
-        recyclerView.setAdapter(mAdapter);
-        llm.scrollToPosition(findIndexOfValue(getValue()));
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.color_picker_dialog_list);
+        if (mClickedDialogItem == -1) {
+            mClickedDialogItem = findIndexOfValue(getValue());
+        }
+        ColorPickerListAdapter adapter = new ColorPickerListAdapter(getContext(), dividerTop,
+                dividerBottom, getEntries(), getEntryColors(), mClickedDialogItem);
+        adapter.setOnItemClickedListener(this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(adapter);
         builder.setView(view);
     }
 
@@ -122,21 +125,22 @@ public class ColorPickerListPreference extends ListPreference implements
     protected void showDialog(Bundle state) {
         super.showDialog(state);
         ((AlertDialog) getDialog()).getButton(
-                AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                AlertDialog.BUTTON_POSITIVE).setEnabled(findIndexOfValue(getValue()) != mClickedDialogItem);
+        mRecyclerView.getLayoutManager().scrollToPosition(mClickedDialogItem);
     }
 
     @Override
     public void onItemClicked(int position) {
         mClickedDialogItem = position;
         ((AlertDialog) getDialog()).getButton(
-                AlertDialog.BUTTON_POSITIVE).setEnabled(findIndexOfValue(getValue()) != position);
+                AlertDialog.BUTTON_POSITIVE).setEnabled(findIndexOfValue(getValue()) != mClickedDialogItem);
     }
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
 
-        mAdapter.setOnItemClickedListener(null);
+        ((ColorPickerListAdapter) mRecyclerView.getAdapter()).setOnItemClickedListener(null);
         if (positiveResult && mClickedDialogItem >= 0 && getEntryValues() != null) {
             String value = getEntryValues()[mClickedDialogItem].toString();
             if (callChangeListener(value)) {
@@ -187,5 +191,55 @@ public class ColorPickerListPreference extends ListPreference implements
      */
     public static int convertToColorInt(String argb) {
         return ColorPickerHelper.convertToColorInt(argb);
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        final SavedState myState = new SavedState(superState);
+        myState.clickedDialogItem = mClickedDialogItem;
+        return myState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state == null) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+         
+        SavedState myState = (SavedState) state;
+        mClickedDialogItem = myState.clickedDialogItem;
+        super.onRestoreInstanceState(myState.getSuperState());
+    }
+    
+    private static class SavedState extends BaseSavedState {
+        int clickedDialogItem;
+
+        public SavedState(Parcel source) {
+            super(source);
+            clickedDialogItem = source.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeInt(clickedDialogItem);
+        }
+
+        public SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }
