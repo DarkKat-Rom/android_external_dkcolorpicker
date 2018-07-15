@@ -68,7 +68,7 @@
             <include layout="@layout/color_picker_palette_color_buttons_layout"
                 android:id="@+id/color_buttons_dk" />
 
-            <include layout="@layout/color_picker_palette_color_buttons_layout"
+            <include layout="@layout/color_picker_material_palette_color_buttons_layout"
                 android:id="@+id/color_buttons_material" />
 
             <include layout="@layout/color_picker_palette_color_buttons_layout"

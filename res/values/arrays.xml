@@ -39,6 +39,26 @@
         <item>@id/palette_color_button_8</item>
     </array>
 
+    <array name="color_picker_material_palette_color_buttons">
+        <item>@id/palette_color_button_1</item>
+        <item>@id/palette_color_button_2</item>
+        <item>@id/palette_color_button_3</item>
+        <item>@id/palette_color_button_4</item>
+        <item>@id/palette_color_button_5</item>
+        <item>@id/palette_color_button_6</item>
+        <item>@id/palette_color_button_7</item>>
+        <item>@id/palette_color_button_8</item>
+        <item>@id/palette_color_button_9</item>
+        <item>@id/palette_color_button_10</item>
+        <item>@id/palette_color_button_11</item>
+        <item>@id/palette_color_button_12</item>
+        <item>@id/palette_color_button_13</item>
+        <item>@id/palette_color_button_14</item>
+        <item>@id/palette_color_button_15</item>>
+        <item>@id/palette_color_button_16</item>
+        <item>@id/palette_color_button_17</item>
+    </array>
+
     <array name="color_picker_darkkat_palette">
         <item>@*android:color/darkkat_blue_grey</item>
         <item>@*android:color/darkkat_blue_blue_grey</item>
@@ -51,14 +71,23 @@
     </array>
 
     <array name="color_picker_material_palette">
-        <item>@color/material_red_500</item>
-        <item>@color/material_green_500</item>
+        <item>@color/material_blue_grey_500</item>
         <item>@color/material_blue_500</item>
+        <item>@color/material_light_blue_500</item>
+        <item>@color/material_cyan_500</item>
         <item>@color/material_deep_teal_500</item>
         <item>@color/material_indigo_500</item>
         <item>@color/material_purple_500</item>
-        <item>@color/material_yellow_500</item>>
+        <item>@color/material_deep_purple_500</item>
+        <item>@color/material_pink_500</item>
         <item>@color/material_orange_500</item>
+        <item>@color/material_deep_orange_500</item>
+        <item>@color/material_red_500</item>
+        <item>@color/material_yellow_500</item>
+        <item>@color/material_amber_500</item>
+        <item>@color/material_green_500</item>
+        <item>@color/material_light_green_500</item>
+        <item>@color/material_lime_500</item>
     </array>
 
     <array name="color_picker_rgb_palette">
