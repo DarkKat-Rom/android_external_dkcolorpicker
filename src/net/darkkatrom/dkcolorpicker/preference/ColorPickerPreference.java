@@ -32,11 +32,12 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
-import net.darkkatrom.dkcolorpicker.ColorPickerActivity;
+import net.darkkatrom.dkcolorpicker.activity.ColorPickerThemedActivity;
 import net.darkkatrom.dkcolorpicker.R;
 import net.darkkatrom.dkcolorpicker.drawable.ColorViewCircleDrawable;
 import net.darkkatrom.dkcolorpicker.fragment.ColorPickerFragment;
 import net.darkkatrom.dkcolorpicker.util.ColorPickerHelper;
+import net.darkkatrom.dkcolorpicker.util.ThemeInfo;
 import net.darkkatrom.dkcolorpicker.widget.ColorViewButton;
 
 /**
@@ -70,18 +71,14 @@ public class ColorPickerPreference extends Preference {
     private boolean mAlphaSliderVisible = false;
     private boolean mShowHelpScreen;
 
+    private int mThemeType = 0;
+
     public interface TargetFragment {
-        public void pickColor(Bundle extras, int requestCode);
+        public void pickColor(Bundle extras, int requestCode, int theme);
     }
 
     public interface OwnerActivity {
-        public boolean supportsTheming();
-        public int getThemeResId();
-        public int getThemeLightActionBarResId();
-        public int getThemeLightStatusBarResId();
-        public int getThemeLightNavigationBarResId();
-        public int getThemeLightActionBarLightNavigationBarResId();
-        public int getThemeLightStatusBarLightNavigationBarResId();
+        public ThemeInfo getThemeInfo();
     }
 
     public ColorPickerPreference(Context context) {
@@ -198,28 +195,25 @@ public class ColorPickerPreference extends Preference {
     @Override
     protected void onClick() {
         if (mTargetFragment instanceof TargetFragment) {
-            mTargetFragment.pickColor(getExtras(), RESULT_REQUEST_CODE);
+            Bundle extras = getExtras();
+            mTargetFragment.pickColor(extras, RESULT_REQUEST_CODE, mThemeType);
         }
     }
 
     public void setThemeExtras(Bundle extras) {
+        ThemeInfo themeInfo = null;
         if (getContext() instanceof OwnerActivity) {
             OwnerActivity owner = (OwnerActivity) getContext();
-            extras.putBoolean(ColorPickerActivity.KEY_SUPPORTS_THEMING, owner.supportsTheming());
-            extras.putInt(ColorPickerActivity.KEY_THEME_RES_ID, owner.getThemeResId());
-            extras.putInt(ColorPickerActivity.KEY_THEME_LIGHT_AB_RES_ID,
-                    owner.getThemeLightActionBarResId());
-            extras.putInt(ColorPickerActivity.KEY_THEME_LIGHT_SB_RES_ID,
-                    owner.getThemeLightStatusBarResId());
-            extras.putInt(ColorPickerActivity.KEY_THEME_LIGHT_NB_RES_ID,
-                    owner.getThemeLightNavigationBarResId());
-            extras.putInt(ColorPickerActivity.KEY_THEME_LIGHT_AB_NB_RES_ID,
-                    owner.getThemeLightActionBarLightNavigationBarResId());
-            extras.putInt(ColorPickerActivity.KEY_THEME_LIGHT_SB_NB_RES_ID,
-                    owner.getThemeLightStatusBarLightNavigationBarResId());
-        } else {
-            extras.putBoolean(ColorPickerActivity.KEY_SUPPORTS_THEMING, false);
+            themeInfo = owner.getThemeInfo();
+            if (themeInfo == null) {
+                themeInfo = new ThemeInfo(ThemeInfo.DARKKAT_DAY_NIGHT_THEME);
+            }
         }
+        if (themeInfo == null) {
+            themeInfo = new ThemeInfo();
+        }
+        mThemeType = themeInfo.getThemeType();
+        extras.putParcelable(ColorPickerThemedActivity.KEY_THEME_INFO, themeInfo);
     }
 
     public void setTargetFragment(TargetFragment fragment) {
