@@ -23,7 +23,7 @@ import android.os.Bundle;
 
 import net.darkkatrom.dkcolorpicker.fragment.ColorPickerFragment;
 
-public class ColorPickerBaseActivity extends Activity {
+public class ColorPickerActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

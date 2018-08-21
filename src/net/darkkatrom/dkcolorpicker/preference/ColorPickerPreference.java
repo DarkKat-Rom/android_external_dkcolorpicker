@@ -71,7 +71,7 @@ public class ColorPickerPreference extends Preference {
     private boolean mAlphaSliderVisible = false;
     private boolean mShowHelpScreen;
 
-    private int mThemeType = 0;
+    private int mThemeType = ThemeInfo.DEFAULT_THEME;
 
     public interface TargetFragment {
         public void pickColor(Bundle extras, int requestCode, int theme);
