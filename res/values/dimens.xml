@@ -30,7 +30,7 @@
     <dimen name="color_picker_preference_icon_frame_padding_top_bottom">4dp</dimen>
 
     <!-- Maximum width and height of the color picker preference icon -->
-    <dimen name="color_picker_preference_icon_mah_width_height">48dp</dimen>
+    <dimen name="color_picker_preference_icon_max_width_height">48dp</dimen>
 
     <!-- Top and bottom padding of the color picker preference title layout -->
     <dimen name="color_picker_preference_title_layout_padding_top_bottom">4dp</dimen>
