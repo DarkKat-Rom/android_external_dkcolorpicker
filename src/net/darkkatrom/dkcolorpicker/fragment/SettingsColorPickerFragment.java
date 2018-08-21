@@ -25,10 +25,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceCategory;
 
-import net.darkkatrom.dkcolorpicker.activity.ColorPickerAppThemedActivity;
-import net.darkkatrom.dkcolorpicker.activity.ColorPickerBaseActivity;
-import net.darkkatrom.dkcolorpicker.activity.ColorPickerDKThemedActivity;
-import net.darkkatrom.dkcolorpicker.activity.ColorPickerMaterialThemedActivity;
+import net.darkkatrom.dkcolorpicker.activity.ColorPickerActivity;
+import net.darkkatrom.dkcolorpicker.activity.ColorPickerThemedActivity;
 import net.darkkatrom.dkcolorpicker.preference.ColorPickerPreference;
 import net.darkkatrom.dkcolorpicker.util.ThemeInfo;
 
@@ -58,17 +56,8 @@ public class SettingsColorPickerFragment extends PreferenceFragment implements
 
     @Override
     public void pickColor(Bundle extras, int requestCode, int themeType) {
-        Class<?> cls = null;
-        if (themeType == ThemeInfo.DEFAULT_THEME) {
-            cls = ColorPickerBaseActivity.class;
-        } else if (themeType == ThemeInfo.DARKKAT_DAY_NIGHT_THEME) {
-            cls = ColorPickerDKThemedActivity.class;
-        } else if (themeType == ThemeInfo.MATERIAL_DAY_NIGHT_THEME) {
-            cls = ColorPickerMaterialThemedActivity.class;
-        } else {
-            cls = ColorPickerAppThemedActivity.class;
-        }
-        Intent intent = new Intent(getActivity(), cls);
+        Intent intent = new Intent(getActivity(), themeType == ThemeInfo.DEFAULT_THEME
+                ? ColorPickerActivity.class : ColorPickerThemedActivity.class);
         intent.putExtras(extras);
         startActivityForResult(intent, requestCode);
     }
