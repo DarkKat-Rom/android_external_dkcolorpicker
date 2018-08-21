@@ -42,8 +42,8 @@
             android:id="@android:id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="@dimen/color_picker_preference_icon_mah_width_height"
-            android:maxHeight="@dimen/color_picker_preference_icon_mah_width_height" />
+            android:maxWidth="@dimen/color_picker_preference_icon_max_width_height"
+            android:maxHeight="@dimen/color_picker_preference_icon_max_width_height" />
     </LinearLayout>
 
     <RelativeLayout
